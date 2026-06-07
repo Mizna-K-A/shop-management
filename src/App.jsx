@@ -585,7 +585,6 @@ const ItemManager = () => {
             </button>
           </div>
         </div>
-
       </div>
     </>
   );
