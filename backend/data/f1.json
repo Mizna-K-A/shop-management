@@ -1,0 +1,17 @@
+{
+  "fileName": "f1",
+  "fileNumber": 1,
+  "totalItems": 1,
+  "totalValue": 90,
+  "createdDate": "2026-06-08T16:17:36.360Z",
+  "items": [
+    {
+      "id": 1780935143793,
+      "name": "op",
+      "price": 90,
+      "pieces": 1,
+      "totalPrice": 90,
+      "date": "6/8/2026"
+    }
+  ]
+}
