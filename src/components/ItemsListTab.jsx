@@ -50,50 +50,56 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
 
   return (
     <div className="w-full">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Items List</h2>
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Total Items:</span>
-            <span className="font-semibold text-lg">{items.length}</span>
+      <div className="mb-8">
+        <h2 className="text-3xl font-extrabold text-slate-800 mb-6 tracking-tight">Items List</h2>
+        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 border border-slate-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-indigo-100 text-indigo-600 p-2.5 rounded-xl">📦</div>
+            <div>
+              <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Total Items</div>
+              <div className="font-black text-2xl text-slate-800">{items.length}</div>
+            </div>
           </div>
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-gray-600">Total Value:</span>
-            <span className="font-semibold text-lg text-green-600">₹{totalValue.toFixed(2)}</span>
+          <div className="flex items-center gap-3">
+            <div className="bg-emerald-100 text-emerald-600 p-2.5 rounded-xl">💰</div>
+            <div>
+              <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Total Value</div>
+              <div className="font-black text-2xl text-emerald-600">₹{totalValue.toFixed(2)}</div>
+            </div>
           </div>
         </div>
       </div>
       
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-slate-100">
+        <table className="min-w-full divide-y divide-slate-100">
+          <thead className="bg-slate-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Item Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Code
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Pieces
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Price/Piece
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Total
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Date
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-slate-100">
             {items.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
+              <tr key={item.id} className="hover:bg-indigo-50/30 transition-colors group">
                 {editingId === item.id ? (
                   <>
                     <td className="px-6 py-4">
@@ -150,24 +156,32 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
                   </>
                 ) : (
                   <>
-                    <td className="px-6 py-4 font-medium text-gray-900">{item.name}</td>
-                    <td className="px-6 py-4 text-gray-500">{item.purchaseCode || '-'}</td>
-                    <td className="px-6 py-4 text-gray-600">{item.pieces}</td>
-                    <td className="px-6 py-4 text-gray-600">₹{item.price.toFixed(2)}</td>
-                    <td className="px-6 py-4 font-semibold text-gray-900">
+                    <td className="px-6 py-4 font-bold text-slate-800">{item.name}</td>
+                    <td className="px-6 py-4 text-slate-500 font-medium">
+                      {item.purchaseCode ? (
+                        <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs border border-slate-200">{item.purchaseCode}</span>
+                      ) : (
+                        <span className="text-slate-300">-</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full text-sm font-semibold">{item.pieces}</span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600 font-medium">₹{item.price.toFixed(2)}</td>
+                    <td className="px-6 py-4 font-black text-emerald-600">
                       ₹{item.totalPrice.toFixed(2)}
                     </td>
-                    <td className="px-6 py-4 text-gray-500 text-sm">{item.date}</td>
+                    <td className="px-6 py-4 text-slate-400 text-sm font-medium">{item.date}</td>
                     <td className="px-6 py-4 text-right">
                       <button
                         onClick={() => startEdit(item)}
-                        className="text-blue-600 hover:text-blue-800 mr-3"
+                        className="text-indigo-600 hover:text-indigo-800 font-semibold mr-4 transition-colors"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => onDeleteItem(item.id)}
-                        className="text-red-600 hover:text-red-800"
+                        className="text-red-500 hover:text-red-700 font-semibold transition-colors"
                       >
                         Delete
                       </button>

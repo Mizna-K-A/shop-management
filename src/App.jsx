@@ -126,7 +126,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 print:block print:bg-white print:h-auto">
+    <div className="flex h-screen bg-slate-50 print:block print:bg-white print:h-auto">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       
       <div className="flex-1 overflow-auto print:overflow-visible">

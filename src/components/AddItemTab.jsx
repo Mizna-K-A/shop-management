@@ -30,47 +30,47 @@ const AddItemTab = ({ onAddItem, loading }) => {
   return (
     <div className="w-full">
       <div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Item</h2>
+        <h2 className="text-3xl font-extrabold text-slate-800 mb-8 tracking-tight">Add New Item</h2>
         
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-slate-100">
+          <div className="mb-5">
+            <label className="block text-slate-700 font-semibold mb-2 text-sm uppercase tracking-wide">
               Item Name
             </label>
             <input
               type="text"
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all focus:bg-white"
               placeholder="Enter item name"
               disabled={loading}
             />
           </div>
           
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
+          <div className="mb-5">
+            <label className="block text-slate-700 font-semibold mb-2 text-sm uppercase tracking-wide">
               Purchase Code
             </label>
             <input
               type="text"
               value={purchaseCode}
               onChange={(e) => setPurchaseCode(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all focus:bg-white"
               placeholder="Enter purchase code"
               disabled={loading}
             />
           </div>
           
-          <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
+          <div className="mb-8">
+            <label className="block text-slate-700 font-semibold mb-2 text-sm uppercase tracking-wide">
               Price per Piece (₹)
             </label>
             <input
               type="number"
               value={itemPrice}
               onChange={(e) => setItemPrice(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter price per piece"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all focus:bg-white"
+              placeholder="0.00"
               min="0"
               step="0.01"
               disabled={loading}
@@ -80,18 +80,20 @@ const AddItemTab = ({ onAddItem, loading }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+            className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-3.5 rounded-xl hover:shadow-lg hover:shadow-indigo-200/50 hover:-translate-y-0.5 transition-all duration-200 font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             {loading ? 'Adding...' : 'Add Item'}
           </button>
         </form>
         
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-800 mb-2">Quick Tips</h3>
-          <ul className="text-sm text-blue-700 space-y-1">
-            <li>• Items will be automatically saved when reaching 100 items</li>
-            <li>• Each file can hold up to 100 items</li>
-            <li>• You can manually save items from the Files tab</li>
+        <div className="mt-8 bg-indigo-50 border border-indigo-100 rounded-2xl p-6">
+          <h3 className="font-bold text-indigo-900 mb-3 flex items-center gap-2">
+            <span className="text-xl">💡</span> Quick Tips
+          </h3>
+          <ul className="text-sm text-indigo-800/80 space-y-2">
+            <li className="flex items-center gap-2"><span>•</span> Items will be automatically saved when reaching 100 items</li>
+            <li className="flex items-center gap-2"><span>•</span> Each file can hold up to 100 items</li>
+            <li className="flex items-center gap-2"><span>•</span> You can manually save items from the Files tab</li>
           </ul>
         </div>
       </div>

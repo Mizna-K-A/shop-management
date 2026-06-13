@@ -72,47 +72,47 @@ const FilesTab = ({ currentFileIndex, fileItemsCount, onManualSave, onReset, ite
   return (
     <div className="p-8">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">File Management</h2>
+        <h2 className="text-3xl font-extrabold text-slate-800 mb-8 tracking-tight">File Management</h2>
         
         {/* Current File Status */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Current File Status</h3>
+        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 mb-8 border border-slate-100">
+          <h3 className="text-xl font-extrabold text-slate-800 mb-6 tracking-tight">Current File Status</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <div className="bg-blue-50 rounded-lg p-4">
-              <div className="text-sm text-blue-600 mb-1">Current File</div>
-              <div className="text-2xl font-bold text-blue-800">f{currentFileIndex}</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+              <div className="text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wider">Current File</div>
+              <div className="text-3xl font-black text-indigo-900">f{currentFileIndex}</div>
             </div>
-            <div className="bg-green-50 rounded-lg p-4">
-              <div className="text-sm text-green-600 mb-1">Items in File</div>
-              <div className="text-2xl font-bold text-green-800">{fileItemsCount}/100</div>
+            <div className="bg-emerald-50 rounded-xl p-5 border border-emerald-100">
+              <div className="text-xs font-bold text-emerald-600 mb-1 uppercase tracking-wider">Items in File</div>
+              <div className="text-3xl font-black text-emerald-900">{fileItemsCount}/100</div>
             </div>
-            <div className="bg-orange-50 rounded-lg p-4">
-              <div className="text-sm text-orange-600 mb-1">Items Until Next File</div>
-              <div className="text-2xl font-bold text-orange-800">{itemsRemaining}</div>
+            <div className="bg-amber-50 rounded-xl p-5 border border-amber-100">
+              <div className="text-xs font-bold text-amber-600 mb-1 uppercase tracking-wider">Items Until Next File</div>
+              <div className="text-3xl font-black text-amber-900">{itemsRemaining}</div>
             </div>
           </div>
           
-          <div className="mb-4">
-            <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
+          <div className="mb-6">
+            <div className="bg-slate-100 rounded-full h-3 overflow-hidden shadow-inner">
               <div 
-                className="bg-green-500 h-full transition-all duration-300"
+                className="bg-gradient-to-r from-emerald-400 to-emerald-500 h-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
           
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             <button
               onClick={onManualSave}
               disabled={items.length === 0}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl hover:shadow-lg hover:shadow-indigo-200 hover:-translate-y-0.5 transition-all duration-200 font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               💾 Save Current File
             </button>
             <button
               onClick={onReset}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              className="px-6 py-3 bg-white border-2 border-rose-100 text-rose-600 rounded-xl hover:bg-rose-50 hover:border-rose-200 transition-all font-bold"
             >
               🗑️ Reset All Items
             </button>
@@ -120,16 +120,16 @@ const FilesTab = ({ currentFileIndex, fileItemsCount, onManualSave, onReset, ite
         </div>
         
         {/* Backup and Restore */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Backup & Restore</h3>
-          <div className="flex gap-3">
+        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 mb-8 border border-slate-100">
+          <h3 className="text-xl font-extrabold text-slate-800 mb-6 tracking-tight">Backup & Restore</h3>
+          <div className="flex gap-4">
             <button
               onClick={handleExportBackup}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:shadow-lg hover:shadow-emerald-200 hover:-translate-y-0.5 transition-all duration-200 font-bold"
             >
               💾 Export Backup
             </button>
-            <label className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 cursor-pointer">
+            <label className="px-6 py-3 bg-white border-2 border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all font-bold cursor-pointer inline-block">
               📂 Import Backup
               <input
                 type="file"
@@ -142,30 +142,31 @@ const FilesTab = ({ currentFileIndex, fileItemsCount, onManualSave, onReset, ite
         </div>
         
         {/* Saved Files */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Saved Files</h3>
+        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-slate-100">
+          <h3 className="text-xl font-extrabold text-slate-800 mb-6 tracking-tight">Saved Files</h3>
           
           {loading ? (
             <div className="text-center py-8">Loading...</div>
           ) : files.length === 0 ? (
             <div className="text-center py-8 text-gray-500">No saved files found</div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {files.map((file) => (
-                <div key={file.fileName} className="border rounded-lg p-4 hover:bg-gray-50">
+                <div key={file.fileName} className="border border-slate-100 rounded-xl p-5 hover:bg-indigo-50/30 hover:border-indigo-100 transition-all group">
                   <div className="flex justify-between items-center">
                     <div>
-                      <div className="font-semibold text-gray-800">{file.fileName}</div>
-                      <div className="text-sm text-gray-500">
-                        {file.totalItems} items • ₹{file.totalValue.toFixed(2)}
+                      <div className="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{file.fileName}</div>
+                      <div className="text-sm font-medium text-slate-500 mt-1">
+                        <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs mr-2">{file.totalItems} items</span>
+                        ₹{file.totalValue.toFixed(2)}
                       </div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs font-semibold text-slate-400 mt-2 uppercase tracking-wider">
                         {new Date(file.createdDate).toLocaleString()}
                       </div>
                     </div>
                     <button
                       onClick={() => loadFile(file.fileNumber)}
-                      className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                      className="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-indigo-600 hover:text-white transition-colors"
                     >
                       View
                     </button>

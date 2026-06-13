@@ -3,9 +3,7 @@ import React, { useState } from 'react';
 const BillingTab = ({ items = [] }) => {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
-  
   const [billItems, setBillItems] = useState([]);
-  
   const [itemName, setItemName] = useState('');
   const [itemPurchaseCode, setItemPurchaseCode] = useState('');
   const [itemPrice, setItemPrice] = useState('');
@@ -13,7 +11,6 @@ const BillingTab = ({ items = [] }) => {
 
   const handleAddItem = (e) => {
     e.preventDefault();
-    
     const price = parseFloat(itemPrice);
     const quantity = parseInt(itemQuantity);
     
@@ -22,28 +19,23 @@ const BillingTab = ({ items = [] }) => {
       return;
     }
     
-    const newItem = {
+    setBillItems([...billItems, {
       id: Date.now(),
       name: itemName.trim(),
       purchaseCode: itemPurchaseCode.trim(),
-      price: price,
-      quantity: quantity,
+      price,
+      quantity,
       subtotal: price * quantity
-    };
+    }]);
     
-    setBillItems([...billItems, newItem]);
-    
-    // Reset form
     setItemName('');
     setItemPurchaseCode('');
     setItemPrice('');
     setItemQuantity('1');
   };
 
-  const removeItem = (id) => {
-    setBillItems(billItems.filter(item => item.id !== id));
-  };
-
+  const removeItem = (id) => setBillItems(billItems.filter(item => item.id !== id));
+  
   const clearBill = () => {
     if (window.confirm('Are you sure you want to clear the current bill?')) {
       setCustomerName('');
@@ -63,212 +55,159 @@ const BillingTab = ({ items = [] }) => {
   const grandTotal = billItems.reduce((sum, item) => sum + item.subtotal, 0);
 
   return (
-    <div className="p-4 lg:p-8 max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div className="p-4 max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
-      {/* Left Column: Form Controls (hidden during print) */}
-      <div className="lg:col-span-4 space-y-6 print:hidden">
+      {/* Left Column */}
+      <div className="lg:col-span-4 space-y-4 print:hidden">
         
         {/* Customer Details */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Customer Details</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <input
-                type="text"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="Enter customer name"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-              <input
-                type="text"
-                value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value)}
-                placeholder="Enter phone number"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+        <div className="bg-white rounded-xl shadow-md p-5">
+          <h3 className="text-lg font-bold text-slate-800 mb-4">Customer Details</h3>
+          <div className="space-y-3">
+            <input
+              type="text"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              placeholder="Customer name"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <input
+              type="text"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+              placeholder="Phone number"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
           </div>
         </div>
 
         {/* Add Item Form */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Add Item</h3>
-          <form onSubmit={handleAddItem} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
+        <div className="bg-white rounded-xl shadow-md p-5">
+          <h3 className="text-lg font-bold text-slate-800 mb-4">Add Item</h3>
+          <form onSubmit={handleAddItem} className="space-y-3">
+            <input
+              type="text"
+              list="inventory-items"
+              value={itemName}
+              onChange={(e) => {
+                setItemName(e.target.value);
+                const selectedItem = items.find(i => i.name === e.target.value);
+                if (selectedItem) {
+                  setItemPrice(selectedItem.price.toString());
+                  if (selectedItem.purchaseCode) setItemPurchaseCode(selectedItem.purchaseCode);
+                }
+              }}
+              placeholder="Item name"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <datalist id="inventory-items">
+              {items.map((item, idx) => <option key={idx} value={item.name} />)}
+            </datalist>
+            <input
+              type="text"
+              value={itemPurchaseCode}
+              onChange={(e) => setItemPurchaseCode(e.target.value)}
+              placeholder="Purchase code (optional)"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <div className="flex gap-3">
               <input
-                type="text"
-                list="inventory-items"
-                value={itemName}
-                onChange={(e) => {
-                  setItemName(e.target.value);
-                  const selectedItem = items.find(i => i.name === e.target.value);
-                  if (selectedItem) {
-                    setItemPrice(selectedItem.price.toString());
-                    if (selectedItem.purchaseCode) {
-                      setItemPurchaseCode(selectedItem.purchaseCode);
-                    }
-                  }
-                }}
-                placeholder="Select or type item name..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="number"
+                value={itemPrice}
+                onChange={(e) => setItemPrice(e.target.value)}
+                placeholder="Price"
+                step="0.01"
+                min="0"
+                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              <datalist id="inventory-items">
-                {items.map((item, idx) => (
-                  <option key={idx} value={item.name}>Price: ₹{item.price}</option>
-                ))}
-              </datalist>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Purchase Code (Optional)</label>
               <input
-                type="text"
-                value={itemPurchaseCode}
-                onChange={(e) => setItemPurchaseCode(e.target.value)}
-                placeholder="Enter purchase code"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="number"
+                value={itemQuantity}
+                onChange={(e) => setItemQuantity(e.target.value)}
+                min="1"
+                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
-                <input
-                  type="number"
-                  value={itemPrice}
-                  onChange={(e) => setItemPrice(e.target.value)}
-                  placeholder="0.00"
-                  step="0.01"
-                  min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-                <input
-                  type="number"
-                  value={itemQuantity}
-                  onChange={(e) => setItemQuantity(e.target.value)}
-                  min="1"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
-            >
+            <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 font-semibold transition">
               Add to Bill
             </button>
           </form>
         </div>
       </div>
 
-      {/* Right Column: Invoice Preview (Printed) */}
-      <div className="lg:col-span-8 bg-white rounded-lg shadow-md p-8 print:col-span-12 print:shadow-none print:p-0">
+      {/* Right Column - Invoice */}
+      <div className="lg:col-span-8 bg-white rounded-xl shadow-md p-6 print:shadow-none print:p-0">
         
-        {/* Invoice Header */}
-        <div className="border-b-2 border-gray-200 pb-6 mb-6">
+        {/* Header */}
+        <div className="border-b border-slate-200 pb-6 mb-6">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-3xl font-bold text-gray-800">INVOICE</h2>
-              <p className="text-sm text-gray-500 mt-1">Date: {new Date().toLocaleDateString()}</p>
+              <h2 className="text-2xl font-bold text-slate-800">INVOICE</h2>
+              <p className="text-xs text-slate-500 mt-1">{new Date().toLocaleDateString()}</p>
             </div>
             <div className="text-right">
-              <h1 className="text-xl font-bold text-blue-600">My Shop</h1>
-              <p className="text-sm text-gray-500 mt-1">Thank you for your business.</p>
+              <h1 className="text-xl font-bold text-indigo-600">My Shop</h1>
             </div>
           </div>
-          
-          <div className="mt-8">
-            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Billed To:</h3>
-            {customerName || customerPhone ? (
-              <div className="text-gray-800">
-                <p className="font-semibold text-lg">{customerName || 'Walk-in Customer'}</p>
-                {customerPhone && <p>{customerPhone}</p>}
-              </div>
-            ) : (
-              <p className="text-gray-400 italic">Customer details not provided</p>
-            )}
+          <div className="mt-6">
+            <p className="text-xs font-semibold text-slate-400 mb-1">Billed To:</p>
+            <p className="font-semibold">{customerName || 'Walk-in Customer'}</p>
+            {customerPhone && <p className="text-sm text-gray-600">{customerPhone}</p>}
           </div>
         </div>
 
-        {/* Invoice Table */}
-        <div className="min-h-[300px]">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-gray-200 text-sm text-gray-500 uppercase tracking-wider">
-                <th className="py-3 font-semibold w-2/5">Item Description</th>
-                <th className="py-3 font-semibold text-center w-1/5">Code</th>
-                <th className="py-3 font-semibold text-center w-1/6">Price</th>
-                <th className="py-3 font-semibold text-center w-1/6">Qty</th>
-                <th className="py-3 font-semibold text-right w-1/6">Amount</th>
-                <th className="py-3 w-10 print:hidden"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {billItems.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="py-8 text-center text-gray-400 italic">
-                    No items added to the bill yet.
+        {/* Items Table */}
+        <table className="w-full text-sm">
+          <thead className="border-b border-gray-200">
+            <tr className="text-gray-500">
+              <th className="py-2 text-left">Item</th>
+              <th className="py-2 text-center w-16">Qty</th>
+              <th className="py-2 text-right w-24">Price</th>
+              <th className="py-2 text-right w-24">Total</th>
+              <th className="py-2 w-8 print:hidden"></th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {billItems.length === 0 ? (
+              <tr><td colSpan="5" className="py-8 text-center text-gray-400">No items added</td></tr>
+            ) : (
+              billItems.map((item) => (
+                <tr key={item.id}>
+                  <td className="py-3">
+                    <div className="font-medium">{item.name}</div>
+                    {item.purchaseCode && <div className="text-xs text-gray-400">{item.purchaseCode}</div>}
+                  </td>
+                  <td className="py-3 text-center">{item.quantity}</td>
+                  <td className="py-3 text-right">₹{item.price.toFixed(2)}</td>
+                  <td className="py-3 text-right font-semibold">₹{item.subtotal.toFixed(2)}</td>
+                  <td className="py-3 text-right print:hidden">
+                    <button onClick={() => removeItem(item.id)} className="text-red-400 hover:text-red-600">✕</button>
                   </td>
                 </tr>
-              ) : (
-                billItems.map((item) => (
-                  <tr key={item.id} className="text-gray-800">
-                    <td className="py-4 font-medium">{item.name}</td>
-                    <td className="py-4 text-center text-gray-500">{item.purchaseCode || '-'}</td>
-                    <td className="py-4 text-center">₹{item.price.toFixed(2)}</td>
-                    <td className="py-4 text-center">{item.quantity}</td>
-                    <td className="py-4 text-right font-semibold">₹{item.subtotal.toFixed(2)}</td>
-                    <td className="py-4 text-right print:hidden">
-                      <button 
-                        onClick={() => removeItem(item.id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        ✕
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
 
-        {/* Invoice Totals */}
-        <div className="border-t-2 border-gray-200 pt-6 mt-6">
+        {/* Total */}
+        <div className="border-t border-slate-200 pt-6 mt-6">
           <div className="flex justify-end">
-            <div className="w-64">
-              <div className="flex justify-between py-2 text-xl font-bold text-gray-800 border-b border-gray-300">
-                <span>Total Due:</span>
-                <span className="text-blue-600">₹{grandTotal.toFixed(2)}</span>
-              </div>
+            <div className="text-right">
+              <p className="text-sm text-gray-500">Total Due</p>
+              <p className="text-2xl font-bold text-indigo-600">₹{grandTotal.toFixed(2)}</p>
             </div>
           </div>
         </div>
 
-        {/* Actions (hidden during print) */}
-        <div className="mt-12 flex justify-end gap-4 print:hidden border-t border-gray-100 pt-6">
-          <button
-            onClick={clearBill}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium"
-          >
-            Clear Bill
+        {/* Actions */}
+        <div className="mt-8 flex justify-end gap-3 print:hidden">
+          <button onClick={clearBill} className="px-5 py-2 border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 font-medium">
+            Clear
           </button>
-          <button
-            onClick={printBill}
-            disabled={billItems.length === 0}
-            className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            🖨️ Print Invoice
+          <button onClick={printBill} disabled={billItems.length === 0} className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 font-medium disabled:opacity-50">
+            🖨️ Print
           </button>
         </div>
-
       </div>
     </div>
   );

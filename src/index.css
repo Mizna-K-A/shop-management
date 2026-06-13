@@ -2,6 +2,6 @@
 
 @layer base {
   body {
-    @apply bg-gray-100;
+    @apply bg-slate-50 text-slate-800 antialiased selection:bg-indigo-200 selection:text-indigo-900;
   }
 }
