@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const AddItemTab = ({ onAddItem, loading }) => {
   const [itemName, setItemName] = useState('');
   const [itemPrice, setItemPrice] = useState('');
+  const [purchaseCode, setPurchaseCode] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,11 +18,13 @@ const AddItemTab = ({ onAddItem, loading }) => {
     onAddItem({
       name: itemName.trim(),
       price: price,
+      purchaseCode: purchaseCode.trim(),
       pieces: 1
     });
     
     setItemName('');
     setItemPrice('');
+    setPurchaseCode('');
   };
 
   return (
@@ -44,7 +47,19 @@ const AddItemTab = ({ onAddItem, loading }) => {
             />
           </div>
           
-
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Purchase Code
+            </label>
+            <input
+              type="text"
+              value={purchaseCode}
+              onChange={(e) => setPurchaseCode(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter purchase code"
+              disabled={loading}
+            />
+          </div>
           
           <div className="mb-6">
             <label className="block text-gray-700 font-medium mb-2">

@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
+  const [editPurchaseCode, setEditPurchaseCode] = useState('');
   const [editPrice, setEditPrice] = useState('');
   const [editPieces, setEditPieces] = useState('');
 
   const startEdit = (item) => {
     setEditingId(item.id);
     setEditName(item.name);
+    setEditPurchaseCode(item.purchaseCode || '');
     setEditPrice(item.price.toString());
     setEditPieces(item.pieces.toString());
   };
@@ -24,6 +26,7 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
     
     onUpdateItem(id, {
       name: editName.trim(),
+      purchaseCode: editPurchaseCode.trim(),
       price: price,
       pieces: pieces
     });
@@ -69,6 +72,9 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
                 Item Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Code
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Pieces
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -96,6 +102,14 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
                         className="w-full px-2 py-1 border rounded"
+                      />
+                    </td>
+                    <td className="px-6 py-4">
+                      <input
+                        type="text"
+                        value={editPurchaseCode}
+                        onChange={(e) => setEditPurchaseCode(e.target.value)}
+                        className="w-24 px-2 py-1 border rounded"
                       />
                     </td>
                     <td className="px-6 py-4">
@@ -137,6 +151,7 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
                 ) : (
                   <>
                     <td className="px-6 py-4 font-medium text-gray-900">{item.name}</td>
+                    <td className="px-6 py-4 text-gray-500">{item.purchaseCode || '-'}</td>
                     <td className="px-6 py-4 text-gray-600">{item.pieces}</td>
                     <td className="px-6 py-4 text-gray-600">₹{item.price.toFixed(2)}</td>
                     <td className="px-6 py-4 font-semibold text-gray-900">

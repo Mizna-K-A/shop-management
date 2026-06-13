@@ -7,6 +7,7 @@ const BillingTab = ({ items = [] }) => {
   const [billItems, setBillItems] = useState([]);
   
   const [itemName, setItemName] = useState('');
+  const [itemPurchaseCode, setItemPurchaseCode] = useState('');
   const [itemPrice, setItemPrice] = useState('');
   const [itemQuantity, setItemQuantity] = useState('1');
 
@@ -24,6 +25,7 @@ const BillingTab = ({ items = [] }) => {
     const newItem = {
       id: Date.now(),
       name: itemName.trim(),
+      purchaseCode: itemPurchaseCode.trim(),
       price: price,
       quantity: quantity,
       subtotal: price * quantity
@@ -33,6 +35,7 @@ const BillingTab = ({ items = [] }) => {
     
     // Reset form
     setItemName('');
+    setItemPurchaseCode('');
     setItemPrice('');
     setItemQuantity('1');
   };
@@ -107,6 +110,9 @@ const BillingTab = ({ items = [] }) => {
                   const selectedItem = items.find(i => i.name === e.target.value);
                   if (selectedItem) {
                     setItemPrice(selectedItem.price.toString());
+                    if (selectedItem.purchaseCode) {
+                      setItemPurchaseCode(selectedItem.purchaseCode);
+                    }
                   }
                 }}
                 placeholder="Select or type item name..."
@@ -117,6 +123,16 @@ const BillingTab = ({ items = [] }) => {
                   <option key={idx} value={item.name}>Price: ₹{item.price}</option>
                 ))}
               </datalist>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Purchase Code (Optional)</label>
+              <input
+                type="text"
+                value={itemPurchaseCode}
+                onChange={(e) => setItemPurchaseCode(e.target.value)}
+                placeholder="Enter purchase code"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </div>
             <div className="flex gap-4">
               <div className="flex-1">
@@ -186,7 +202,8 @@ const BillingTab = ({ items = [] }) => {
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-gray-200 text-sm text-gray-500 uppercase tracking-wider">
-                <th className="py-3 font-semibold w-1/2">Item Description</th>
+                <th className="py-3 font-semibold w-2/5">Item Description</th>
+                <th className="py-3 font-semibold text-center w-1/5">Code</th>
                 <th className="py-3 font-semibold text-center w-1/6">Price</th>
                 <th className="py-3 font-semibold text-center w-1/6">Qty</th>
                 <th className="py-3 font-semibold text-right w-1/6">Amount</th>
@@ -204,6 +221,7 @@ const BillingTab = ({ items = [] }) => {
                 billItems.map((item) => (
                   <tr key={item.id} className="text-gray-800">
                     <td className="py-4 font-medium">{item.name}</td>
+                    <td className="py-4 text-center text-gray-500">{item.purchaseCode || '-'}</td>
                     <td className="py-4 text-center">₹{item.price.toFixed(2)}</td>
                     <td className="py-4 text-center">{item.quantity}</td>
                     <td className="py-4 text-right font-semibold">₹{item.subtotal.toFixed(2)}</td>
