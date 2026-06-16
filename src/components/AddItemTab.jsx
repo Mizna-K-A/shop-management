@@ -30,9 +30,9 @@ const AddItemTab = ({ onAddItem, loading }) => {
   return (
     <div className="w-full">
       <div>
-        <h2 className="text-3xl font-extrabold text-slate-800 mb-8 tracking-tight">Add New Item</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-6 md:mb-8 tracking-tight">Add New Item</h2>
         
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-slate-100">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-5 md:p-8 border border-slate-100">
           <div className="mb-5">
             <label className="block text-slate-700 font-semibold mb-2 text-sm uppercase tracking-wide">
               Item Name

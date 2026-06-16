@@ -51,7 +51,7 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
   return (
     <div className="w-full">
       <div className="mb-8">
-        <h2 className="text-3xl font-extrabold text-slate-800 mb-6 tracking-tight">Items List</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-4 md:mb-6 tracking-tight">Items List</h2>
         <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 border border-slate-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div className="flex items-center gap-3">
             <div className="bg-indigo-100 text-indigo-600 p-2.5 rounded-xl">📦</div>
@@ -70,7 +70,7 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
         </div>
       </div>
       
-      <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-slate-100">
+      <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto border border-slate-100">
         <table className="min-w-full divide-y divide-slate-100">
           <thead className="bg-slate-50">
             <tr>

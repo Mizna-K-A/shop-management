@@ -70,12 +70,12 @@ const FilesTab = ({ currentFileIndex, fileItemsCount, onManualSave, onReset, ite
   const progress = (fileItemsCount / 100) * 100;
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-extrabold text-slate-800 mb-8 tracking-tight">File Management</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-6 md:mb-8 tracking-tight">File Management</h2>
         
         {/* Current File Status */}
-        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 mb-8 border border-slate-100">
+        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-5 md:p-8 mb-8 border border-slate-100">
           <h3 className="text-xl font-extrabold text-slate-800 mb-6 tracking-tight">Current File Status</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -102,17 +102,17 @@ const FilesTab = ({ currentFileIndex, fileItemsCount, onManualSave, onReset, ite
             </div>
           </div>
           
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 w-full">
             <button
               onClick={onManualSave}
               disabled={items.length === 0}
-              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl hover:shadow-lg hover:shadow-indigo-200 hover:-translate-y-0.5 transition-all duration-200 font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl hover:shadow-lg hover:shadow-indigo-200 hover:-translate-y-0.5 transition-all duration-200 font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               💾 Save Current File
             </button>
             <button
               onClick={onReset}
-              className="px-6 py-3 bg-white border-2 border-rose-100 text-rose-600 rounded-xl hover:bg-rose-50 hover:border-rose-200 transition-all font-bold"
+              className="w-full sm:w-auto px-6 py-3 bg-white border-2 border-rose-100 text-rose-600 rounded-xl hover:bg-rose-50 hover:border-rose-200 transition-all font-bold"
             >
               🗑️ Reset All Items
             </button>
@@ -120,16 +120,16 @@ const FilesTab = ({ currentFileIndex, fileItemsCount, onManualSave, onReset, ite
         </div>
         
         {/* Backup and Restore */}
-        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 mb-8 border border-slate-100">
+        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-5 md:p-8 mb-8 border border-slate-100">
           <h3 className="text-xl font-extrabold text-slate-800 mb-6 tracking-tight">Backup & Restore</h3>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 w-full">
             <button
               onClick={handleExportBackup}
-              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:shadow-lg hover:shadow-emerald-200 hover:-translate-y-0.5 transition-all duration-200 font-bold"
+              className="w-full sm:w-auto text-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:shadow-lg hover:shadow-emerald-200 hover:-translate-y-0.5 transition-all duration-200 font-bold"
             >
               💾 Export Backup
             </button>
-            <label className="px-6 py-3 bg-white border-2 border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all font-bold cursor-pointer inline-block">
+            <label className="w-full sm:w-auto text-center px-6 py-3 bg-white border-2 border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all font-bold cursor-pointer inline-block">
               📂 Import Backup
               <input
                 type="file"
@@ -142,7 +142,7 @@ const FilesTab = ({ currentFileIndex, fileItemsCount, onManualSave, onReset, ite
         </div>
         
         {/* Saved Files */}
-        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-slate-100">
+        <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-5 md:p-8 border border-slate-100">
           <h3 className="text-xl font-extrabold text-slate-800 mb-6 tracking-tight">Saved Files</h3>
           
           {loading ? (
@@ -153,7 +153,7 @@ const FilesTab = ({ currentFileIndex, fileItemsCount, onManualSave, onReset, ite
             <div className="space-y-4">
               {files.map((file) => (
                 <div key={file.fileName} className="border border-slate-100 rounded-xl p-5 hover:bg-indigo-50/30 hover:border-indigo-100 transition-all group">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                       <div className="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{file.fileName}</div>
                       <div className="text-sm font-medium text-slate-500 mt-1">
@@ -166,7 +166,7 @@ const FilesTab = ({ currentFileIndex, fileItemsCount, onManualSave, onReset, ite
                     </div>
                     <button
                       onClick={() => loadFile(file.fileNumber)}
-                      className="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-indigo-600 hover:text-white transition-colors"
+                      className="w-full sm:w-auto px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-indigo-600 hover:text-white transition-colors"
                     >
                       View
                     </button>

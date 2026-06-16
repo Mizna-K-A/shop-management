@@ -8,6 +8,9 @@ const BillingTab = ({ items = [] }) => {
   const [itemPurchaseCode, setItemPurchaseCode] = useState('');
   const [itemPrice, setItemPrice] = useState('');
   const [itemQuantity, setItemQuantity] = useState('1');
+  const [billNumber, setBillNumber] = useState(() => {
+    return localStorage.getItem('lastBillNumber') || '1001';
+  });
 
   const handleAddItem = (e) => {
     e.preventDefault();
@@ -36,11 +39,16 @@ const BillingTab = ({ items = [] }) => {
 
   const removeItem = (id) => setBillItems(billItems.filter(item => item.id !== id));
   
-  const clearBill = () => {
-    if (window.confirm('Are you sure you want to clear the current bill?')) {
+  const startNewBill = () => {
+    if (billItems.length === 0 || window.confirm('Are you sure you want to clear the current bill and start a new one?')) {
       setCustomerName('');
       setCustomerPhone('');
       setBillItems([]);
+      
+      const nextNum = (parseInt(billNumber, 10) || 1000) + 1;
+      const nextNumStr = nextNum.toString();
+      setBillNumber(nextNumStr);
+      localStorage.setItem('lastBillNumber', nextNumStr);
     }
   };
 
@@ -62,8 +70,20 @@ const BillingTab = ({ items = [] }) => {
         
         {/* Customer Details */}
         <div className="bg-white rounded-xl shadow-md p-5">
-          <h3 className="text-lg font-bold text-slate-800 mb-4">Customer Details</h3>
+          <h3 className="text-lg font-bold text-slate-800 mb-4">Bill Details</h3>
           <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-medium text-slate-700 whitespace-nowrap">Bill No:</label>
+              <input
+                type="text"
+                value={billNumber}
+                onChange={(e) => {
+                  setBillNumber(e.target.value);
+                  localStorage.setItem('lastBillNumber', e.target.value);
+                }}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
+              />
+            </div>
             <input
               type="text"
               value={customerName}
@@ -110,7 +130,7 @@ const BillingTab = ({ items = [] }) => {
               placeholder="Purchase code (optional)"
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="number"
                 value={itemPrice}
@@ -142,7 +162,7 @@ const BillingTab = ({ items = [] }) => {
         <div className="border-b border-slate-200 pb-6 mb-6">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-2xl font-bold text-slate-800">INVOICE</h2>
+              <h2 className="text-2xl font-bold text-slate-800">INVOICE <span className="text-slate-500 font-medium text-lg ml-2">#{billNumber}</span></h2>
               <p className="text-xs text-slate-500 mt-1">{new Date().toLocaleDateString()}</p>
             </div>
             <div className="text-right">
@@ -157,37 +177,39 @@ const BillingTab = ({ items = [] }) => {
         </div>
 
         {/* Items Table */}
-        <table className="w-full text-sm">
-          <thead className="border-b border-gray-200">
-            <tr className="text-gray-500">
-              <th className="py-2 text-left">Item</th>
-              <th className="py-2 text-center w-16">Qty</th>
-              <th className="py-2 text-right w-24">Price</th>
-              <th className="py-2 text-right w-24">Total</th>
-              <th className="py-2 w-8 print:hidden"></th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {billItems.length === 0 ? (
-              <tr><td colSpan="5" className="py-8 text-center text-gray-400">No items added</td></tr>
-            ) : (
-              billItems.map((item) => (
-                <tr key={item.id}>
-                  <td className="py-3">
-                    <div className="font-medium">{item.name}</div>
-                    {item.purchaseCode && <div className="text-xs text-gray-400">{item.purchaseCode}</div>}
-                  </td>
-                  <td className="py-3 text-center">{item.quantity}</td>
-                  <td className="py-3 text-right">₹{item.price.toFixed(2)}</td>
-                  <td className="py-3 text-right font-semibold">₹{item.subtotal.toFixed(2)}</td>
-                  <td className="py-3 text-right print:hidden">
-                    <button onClick={() => removeItem(item.id)} className="text-red-400 hover:text-red-600">✕</button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[500px]">
+            <thead className="border-b border-gray-200">
+              <tr className="text-gray-500">
+                <th className="py-2 text-left">Item</th>
+                <th className="py-2 text-center w-16">Qty</th>
+                <th className="py-2 text-right w-24">Price</th>
+                <th className="py-2 text-right w-24">Total</th>
+                <th className="py-2 w-8 print:hidden"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {billItems.length === 0 ? (
+                <tr><td colSpan="5" className="py-8 text-center text-gray-400">No items added</td></tr>
+              ) : (
+                billItems.map((item) => (
+                  <tr key={item.id}>
+                    <td className="py-3">
+                      <div className="font-medium">{item.name}</div>
+                      {item.purchaseCode && <div className="text-xs text-gray-400">{item.purchaseCode}</div>}
+                    </td>
+                    <td className="py-3 text-center">{item.quantity}</td>
+                    <td className="py-3 text-right">₹{item.price.toFixed(2)}</td>
+                    <td className="py-3 text-right font-semibold">₹{item.subtotal.toFixed(2)}</td>
+                    <td className="py-3 text-right print:hidden">
+                      <button onClick={() => removeItem(item.id)} className="text-red-400 hover:text-red-600">✕</button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
         {/* Total */}
         <div className="border-t border-slate-200 pt-6 mt-6">
@@ -200,11 +222,11 @@ const BillingTab = ({ items = [] }) => {
         </div>
 
         {/* Actions */}
-        <div className="mt-8 flex justify-end gap-3 print:hidden">
-          <button onClick={clearBill} className="px-5 py-2 border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 font-medium">
-            Clear
+        <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3 print:hidden">
+          <button onClick={startNewBill} className="w-full sm:w-auto px-5 py-2 border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 font-medium">
+            New Bill
           </button>
-          <button onClick={printBill} disabled={billItems.length === 0} className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 font-medium disabled:opacity-50">
+          <button onClick={printBill} disabled={billItems.length === 0} className="w-full sm:w-auto px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 font-medium disabled:opacity-50">
             🖨️ Print
           </button>
         </div>

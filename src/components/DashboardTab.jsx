@@ -16,14 +16,14 @@ const DashboardTab = ({ items, currentFileIndex, fileItemsCount }) => {
   const recentItems = [...items].reverse().slice(0, 5);
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-extrabold text-slate-800 mb-8 tracking-tight">Dashboard</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-6 md:mb-8 tracking-tight">Dashboard</h2>
         
         {/* File Info */}
-        <div className="bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl shadow-xl shadow-indigo-200/50 p-8 mb-8 text-white relative overflow-hidden">
+        <div className="bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl shadow-xl shadow-indigo-200/50 p-6 md:p-8 mb-8 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-10 blur-3xl"></div>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <div className="text-sm opacity-90">Current Working File</div>
               <div className="text-3xl font-bold">f{currentFileIndex}</div>
@@ -31,7 +31,7 @@ const DashboardTab = ({ items, currentFileIndex, fileItemsCount }) => {
                 {fileItemsCount}/100 items used
               </div>
             </div>
-            <div className="text-right">
+            <div className="text-left sm:text-right w-full sm:w-auto border-t border-white/20 sm:border-0 pt-4 sm:pt-0 mt-2 sm:mt-0">
               <div className="text-sm opacity-90">Storage Status</div>
               <div className="text-2xl font-bold">{100 - fileItemsCount} slots left</div>
             </div>

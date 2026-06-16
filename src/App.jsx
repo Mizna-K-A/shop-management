@@ -126,10 +126,10 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 print:block print:bg-white print:h-auto">
+    <div className="flex flex-col md:flex-row h-screen bg-slate-50 print:block print:bg-white print:h-auto">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      <div className="flex-1 overflow-auto print:overflow-visible">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden print:overflow-visible">
         {activeTab === 'dashboard' && (
           <DashboardTab 
             items={items}
