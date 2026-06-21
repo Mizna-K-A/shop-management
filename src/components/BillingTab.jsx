@@ -92,20 +92,20 @@ const BillingTab = ({ items = [] }) => {
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
               />
             </div>
-            <input
+            {/* <input
               type="text"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               placeholder="Customer name"
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <input
+            /> */}
+            {/* <input
               type="text"
               value={customerPhone}
               onChange={(e) => setCustomerPhone(e.target.value)}
               placeholder="Phone number"
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+            /> */}
           </div>
         </div>
 
@@ -164,64 +164,66 @@ const BillingTab = ({ items = [] }) => {
       </div>
 
       {/* Right Column - Invoice */}
-      <div className="lg:col-span-8 bg-white rounded-xl shadow-md p-6 print:shadow-none print:p-0">
+      <div className="lg:col-span-8 bg-white rounded-xl shadow-md p-6 print:shadow-none print:p-1">
         
         {/* Print Container - Optimized for 3-inch thermal printer */}
         <div className="print-container">
           {/* Header */}
-          <div className="border-b border-slate-200 pb-4 mb-4 print:border-b-2 print:border-black print:pb-2 print:mb-2">
+          <div className="border-b border-slate-200 pb-2 mb-2 print:border-b-2 print:border-black print:pb-1 print:mb-1">
             <div className="flex justify-between items-start print:flex-col print:items-center">
               <div>
-                <h2 className="text-2xl font-bold text-slate-800 print:text-lg print:font-extrabold print:text-center print:tracking-wide">
-                  INVOICE <span className="text-slate-500 font-medium text-lg ml-2 print:text-base print:font-bold">#{billNumber}</span>
+                <h2 className="text-xl font-bold text-slate-800 print:text-sm print:font-extrabold print:text-center print:tracking-wide">
+                  Estimate <span className="text-slate-500 font-medium text-base ml-2 print:text-xs print:font-bold">#{billNumber}</span>
                 </h2>
-                <p className="text-xs text-slate-500 mt-1 print:text-sm print:font-bold print:text-center print:tracking-wide">
+                <p className="text-xs text-slate-500 mt-1 print:text-[10px] print:font-bold print:text-center print:tracking-wide">
                   {formatDate(new Date())}
                 </p>
               </div>
-              <div className="text-right print:text-center print:w-full print:mt-2">
-                <h1 className="text-xl font-bold text-indigo-600 print:text-lg print:font-extrabold print:text-black print:tracking-wider">Look Fancy</h1>
-                <p className="text-xs text-gray-500 print:text-sm print:font-bold print:text-black">Moonupeedika Beach Road</p>
-                <p className="text-xs text-gray-500 print:text-sm print:font-bold print:text-black">Phone: 7012479127</p>
+              <div className="text-right print:text-center print:w-full print:mt-1">
+                <h1 className="text-xl font-bold text-indigo-600 print:text-sm print:font-extrabold print:text-black print:tracking-wider">Look Fancy</h1>
+                <p className="text-xs text-gray-500 print:text-[10px] print:font-bold print:text-black">Moonupeedika Beach Road</p>
+                <p className="text-xs text-gray-500 print:text-[10px] print:font-bold print:text-black">Phone: 7012479127</p>
               </div>
             </div>
-            <div className="mt-4 print:mt-3 print:border-t-2 print:border-black print:pt-3">
-              <p className="text-xs font-semibold text-slate-400 mb-1 print:text-sm print:font-extrabold print:text-black print:tracking-wide">Billed To:</p>
-              <p className="font-semibold print:text-base print:font-extrabold print:tracking-wide">{customerName || 'Walk-in Customer'}</p>
-              {customerPhone && <p className="text-sm text-gray-600 print:text-base print:font-bold print:text-black">{customerPhone}</p>}
-            </div>
+            {/* <div className="mt-2 print:mt-1 print:border-t-2 print:border-black print:pt-1">
+              <p className="text-xs font-semibold text-slate-400 mb-0.5 print:text-[10px] print:font-extrabold print:text-black print:tracking-wide">Billed To:</p>
+              <p className="font-semibold print:text-xs print:font-extrabold print:tracking-wide">{customerName || 'Walk-in Customer'}</p>
+              {customerPhone && <p className="text-sm text-gray-600 print:text-xs print:font-bold print:text-black">{customerPhone}</p>}
+            </div> */}
           </div>
 
-          {/* Items Table */}
+          {/* Items Table - Table header border removed */}
           <div className="overflow-x-auto print:overflow-visible">
-            <table className="w-full text-sm min-w-[500px] print:min-w-0 print:text-base">
-              <thead className="border-b border-gray-200 print:border-b-2 print:border-black">
+            <table className="w-full text-sm min-w-[500px] print:min-w-0 print:text-xs">
+              <thead className="print:border-none">
                 <tr className="text-gray-500 print:text-black print:font-extrabold">
-                  <th className="py-2 text-left print:py-2 print:pl-0 print:text-base">Item</th>
-                  <th className="py-2 text-center w-12 print:w-10 print:py-2 print:text-base">Qty</th>
-                  <th className="py-2 text-right w-20 print:w-16 print:py-2 print:text-base">Price</th>
-                  <th className="py-2 text-right w-24 print:w-20 print:py-2 print:text-base">Total</th>
-                  <th className="py-2 w-8 print:hidden"></th>
+                  <th className="py-0.5 text-left print:py-0.5 print:pl-0 print:text-[10px]">Item</th>
+                  <th className="py-0.5 text-center w-12 print:w-8 print:py-0.5 print:text-[10px]">Qty</th>
+                  <th className="py-0.5 text-right w-20 print:w-14 print:py-0.5 print:text-[10px]">Price</th>
+                  <th className="py-0.5 text-right w-24 print:w-16 print:py-0.5 print:text-[10px]">Total</th>
+                  <th className="py-0.5 w-8 print:hidden"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 print:divide-y-2 print:divide-black">
+              <tbody className="print:divide-y-0">
                 {billItems.length === 0 ? (
-                  <tr><td colSpan="5" className="py-8 text-center text-gray-400 print:py-4 print:text-base print:font-bold print:text-black">No items added</td></tr>
+                  <tr><td colSpan="5" className="py-2 text-center text-gray-400 print:py-1 print:text-[10px] print:font-bold print:text-black">No items added</td></tr>
                 ) : (
                   billItems.map((item) => (
-                    <tr key={item.id}>
-                      <td className="py-3 print:py-2 print:pl-0">
-                        <div className="font-medium print:text-base print:font-extrabold print:tracking-wide">{item.name}</div>
+                    <tr key={item.id} className="print:border-none">
+                      <td className="py-0.5 print:py-0.5 print:pl-0">
+                        <div className="font-medium print:text-[10px] print:font-extrabold print:tracking-wide break-words whitespace-normal">
+                          {item.name}
+                        </div>
                         {item.purchaseCode && (
-                          <div className="text-xs text-gray-400 print:text-sm print:font-bold print:text-black">
+                          <div className="text-xs text-gray-400 print:text-[9px] print:font-bold print:text-black">
                             ({item.purchaseCode})
                           </div>
                         )}
                       </td>
-                      <td className="py-3 text-center print:py-2 print:text-base print:font-bold">{item.quantity}</td>
-                      <td className="py-3 text-right print:py-2 print:text-base print:font-bold">₹{item.price.toFixed(2)}</td>
-                      <td className="py-3 text-right font-semibold print:py-2 print:text-base print:font-extrabold">₹{item.subtotal.toFixed(2)}</td>
-                      <td className="py-3 text-right print:hidden">
+                      <td className="py-0.5 text-center print:py-0.5 print:text-[10px] print:font-bold">{item.quantity}</td>
+                      <td className="py-0.5 text-right print:py-0.5 print:text-[10px] print:font-bold">₹{item.price.toFixed(2)}</td>
+                      <td className="py-0.5 text-right font-semibold print:py-0.5 print:text-[10px] print:font-extrabold">₹{item.subtotal.toFixed(2)}</td>
+                      <td className="py-0.5 text-right print:hidden">
                         <button onClick={() => removeItem(item.id)} className="text-red-400 hover:text-red-600">✕</button>
                       </td>
                     </tr>
@@ -232,28 +234,18 @@ const BillingTab = ({ items = [] }) => {
           </div>
 
           {/* Total */}
-          <div className="border-t border-slate-200 pt-4 mt-4 print:border-t-4 print:border-black print:pt-4 print:mt-4">
+          <div className="border-t border-slate-200 pt-2 mt-2 print:border-t-4 print:border-black print:pt-1 print:mt-1">
             <div className="flex justify-end print:justify-between">
               <div className="text-right print:w-full print:flex print:justify-between print:items-center">
-                <p className="text-sm text-gray-500 print:text-lg print:font-extrabold print:text-black print:tracking-wider">TOTAL</p>
-                <p className="text-2xl font-bold text-indigo-600 print:text-2xl print:font-black print:text-black print:tracking-wider">₹{grandTotal.toFixed(2)}</p>
+                <p className="text-sm text-gray-500 print:text-sm print:font-extrabold print:text-black print:tracking-wider">TOTAL</p>
+                <p className="text-2xl font-bold text-indigo-600 print:text-base print:font-black print:text-black print:tracking-wider">₹{grandTotal.toFixed(2)}</p>
               </div>
             </div>
-          </div>
-
-          {/* Footer */}
-          <div className="mt-4 pt-4 border-t border-slate-200 print:mt-4 print:pt-4 print:border-t-2 print:border-black">
-            <p className="text-center text-xs text-gray-500 print:text-base print:font-extrabold print:text-black print:tracking-wide">
-              Thank you for your business!
-            </p>
-            <p className="text-center text-[10px] text-gray-400 print:text-sm print:font-bold print:text-black print:tracking-wide">
-              GSTIN: 22AAAAA0000A1Z5
-            </p>
-          </div>
+          </div>         
         </div>
 
         {/* Actions */}
-        <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3 print:hidden">
+        <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3 print:hidden">
           <button onClick={startNewBill} className="w-full sm:w-auto px-5 py-2 border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 font-medium">
             New Bill
           </button>
@@ -268,7 +260,7 @@ const BillingTab = ({ items = [] }) => {
         @media print {
           @page {
             size: 80mm auto; /* 3-inch thermal paper */
-            margin: 3mm 2mm;
+            // margin: 1mm 1mm;
           }
           
           body {
@@ -280,7 +272,7 @@ const BillingTab = ({ items = [] }) => {
           .print-container {
             max-width: 72mm;
             margin: 0 auto;
-            padding: 0 2mm;
+            // padding: 0 0.5mm;
             font-family: 'Courier New', 'Courier', monospace;
           }
           
@@ -314,26 +306,41 @@ const BillingTab = ({ items = [] }) => {
             font-weight: 900 !important;
           }
           
-          /* Increase font sizes for better readability */
-          .print-container {
-            font-size: 14px !important;
+          /* COMPLETELY REMOVE ALL LINES BETWEEN ITEM ROWS */
+          // .print-container tbody tr {
+          //   border-bottom: none !important;
+          // }
+          
+          /* Remove any other potential borders */
+          .print-container tbody tr:not(:last-child) {
+            border-bottom: none !important;
           }
           
-          .print-container table {
-            font-size: 14px !important;
+          /* Remove any table row borders */
+          .print-container table tbody tr {
+            border: none !important;
           }
           
-          .print-container .text-2xl {
-            font-size: 24px !important;
+          /* Remove table header border */
+          .print-container thead {
+            border: none !important;
           }
           
-          /* Make borders thicker */
+          .print-container thead tr {
+            border: none !important;
+          }
+          
+          .print-container thead th {
+            border: none !important;
+          }
+          
+          /* Make borders thicker for sections only */
           .print-container .border-b {
-            border-bottom-width: 3px !important;
+            border-bottom-width: 2px !important;
           }
           
           .print-container .border-t {
-            border-top-width: 3px !important;
+            border-top-width: 2px !important;
           }
           
           /* Hide background colors in print */
@@ -341,19 +348,19 @@ const BillingTab = ({ items = [] }) => {
             background: transparent !important;
           }
           
-          /* Add extra spacing for clarity */
-          .print-container .py-2 {
-            padding-top: 6px !important;
-            padding-bottom: 6px !important;
+          /* Reduce padding for compact printing */
+          .print-container .py-0\\.5 {
+            padding-top: 1px !important;
+            padding-bottom: 1px !important;
           }
           
-          .print-container .pt-4 {
-            padding-top: 12px !important;
+          /* Allow long item names to wrap */
+          .print-container .break-words {
+            word-break: break-word !important;
           }
           
-          /* Ensure table borders are visible */
-          .print-container tbody tr {
-            border-bottom: 2px solid #000 !important;
+          .print-container .whitespace-normal {
+            white-space: normal !important;
           }
         }
         
