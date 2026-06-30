@@ -4,6 +4,7 @@ const BillingTab = ({ items = [] }) => {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [billItems, setBillItems] = useState([]);
+  const [discount, setDiscount] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemPurchaseCode, setItemPurchaseCode] = useState('');
   const [itemPrice, setItemPrice] = useState('');
@@ -44,6 +45,7 @@ const BillingTab = ({ items = [] }) => {
       setCustomerName('');
       setCustomerPhone('');
       setBillItems([]);
+      setDiscount('');
       
       const nextNum = (parseInt(billNumber, 10) || 1000) + 1;
       const nextNumStr = nextNum.toString();
@@ -60,7 +62,9 @@ const BillingTab = ({ items = [] }) => {
     window.print();
   };
 
-  const grandTotal = billItems.reduce((sum, item) => sum + item.subtotal, 0);
+  const subtotal = billItems.reduce((sum, item) => sum + item.subtotal, 0);
+  const discountAmount = parseFloat(discount) || 0;
+  const grandTotal = Math.max(0, subtotal - discountAmount);
 
   // Format date as dd/mm/yyyy
   const formatDate = (date) => {
@@ -90,6 +94,18 @@ const BillingTab = ({ items = [] }) => {
                   localStorage.setItem('lastBillNumber', e.target.value);
                 }}
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-medium text-slate-700 whitespace-nowrap">Discount (₹):</label>
+              <input
+                type="number"
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+                placeholder="0"
+                min="0"
+                step="0.01"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400 font-semibold"
               />
             </div>
             {/* <input
@@ -235,8 +251,20 @@ const BillingTab = ({ items = [] }) => {
 
           {/* Total */}
           <div className="border-t border-slate-200 pt-2 mt-2 print:border-t-4 print:border-black print:pt-1 print:mt-1">
-            <div className="flex justify-end print:justify-between">
-              <div className="text-right print:w-full print:flex print:justify-between print:items-center">
+            <div className="flex flex-col items-end gap-0.5 print:w-full">
+              {discountAmount > 0 && (
+                <>
+                  <div className="flex justify-between w-full max-w-xs print:max-w-full">
+                    <p className="text-sm text-gray-500 print:text-[10px] print:font-extrabold print:text-black">Subtotal</p>
+                    <p className="text-sm font-medium text-slate-700 print:text-[10px] print:font-extrabold print:text-black">₹{subtotal.toFixed(2)}</p>
+                  </div>
+                  <div className="flex justify-between w-full max-w-xs print:max-w-full">
+                    <p className="text-sm text-rose-500 print:text-[10px] print:font-extrabold print:text-black">Discount</p>
+                    <p className="text-sm font-medium text-rose-500 print:text-[10px] print:font-extrabold print:text-black">- ₹{discountAmount.toFixed(2)}</p>
+                  </div>
+                </>
+              )}
+              <div className="flex justify-between w-full max-w-xs print:max-w-full print:border-t-2 print:border-black print:pt-0.5 print:mt-0.5">
                 <p className="text-sm text-gray-500 print:text-sm print:font-extrabold print:text-black print:tracking-wider">TOTAL</p>
                 <p className="text-2xl font-bold text-indigo-600 print:text-base print:font-black print:text-black print:tracking-wider">₹{grandTotal.toFixed(2)}</p>
               </div>
