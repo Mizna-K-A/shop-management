@@ -9,9 +9,29 @@ const BillingTab = ({ items = [] }) => {
   const [itemPurchaseCode, setItemPurchaseCode] = useState('');
   const [itemPrice, setItemPrice] = useState('');
   const [itemQuantity, setItemQuantity] = useState('1');
+  const [itemSearchTerm, setItemSearchTerm] = useState('');
   const [billNumber, setBillNumber] = useState(() => {
     return localStorage.getItem('lastBillNumber') || '1001';
   });
+
+  const handleQuickAdd = (item) => {
+    const price = parseFloat(item.price);
+    const quantity = 1;
+
+    if (isNaN(price) || price <= 0) {
+      alert('Item has an invalid price.');
+      return;
+    }
+
+    setBillItems(prevItems => [...prevItems, {
+      id: Date.now().toString() + Math.random().toString(),
+      name: item.name,
+      purchaseCode: item.purchaseCode || '',
+      price,
+      quantity,
+      subtotal: price * quantity
+    }]);
+  };
 
   const handleAddItem = (e) => {
     e.preventDefault();
@@ -65,6 +85,11 @@ const BillingTab = ({ items = [] }) => {
   const subtotal = billItems.reduce((sum, item) => sum + item.subtotal, 0);
   const discountAmount = parseFloat(discount) || 0;
   const grandTotal = Math.max(0, subtotal - discountAmount);
+
+  const filteredItems = items.filter(item => 
+    item.name?.toLowerCase().includes(itemSearchTerm.toLowerCase()) || 
+    item.purchaseCode?.toLowerCase().includes(itemSearchTerm.toLowerCase())
+  );
 
   // Format date as dd/mm/yyyy
   const formatDate = (date) => {
@@ -165,7 +190,7 @@ const BillingTab = ({ items = [] }) => {
                 className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />             
             </div>
-             <input
+              <input
                 type="number"
                 value={itemQuantity}
                 onChange={(e) => setItemQuantity(e.target.value)}
@@ -176,6 +201,44 @@ const BillingTab = ({ items = [] }) => {
               Add to Bill
             </button>
           </form>
+        </div>
+
+        {/* Quick Add Items List */}
+        <div className="bg-white rounded-xl shadow-md p-5 flex flex-col max-h-[600px]">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-bold text-slate-800">Available Items</h3>
+          </div>
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Search items..."
+              value={itemSearchTerm}
+              onChange={(e) => setItemSearchTerm(e.target.value)}
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+            />
+          </div>
+          <div className="overflow-y-auto space-y-2 pr-1 flex-1">
+            {filteredItems.length === 0 ? (
+              <p className="text-sm text-slate-500 text-center py-4">No items found</p>
+            ) : (
+              filteredItems.map((item, idx) => (
+                <div 
+                  key={idx} 
+                  onClick={() => handleQuickAdd(item)}
+                  className="p-3 border border-slate-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 cursor-pointer transition flex justify-between items-center group"
+                >
+                  <div className="flex-1 mr-2">
+                    <p className="font-medium text-slate-800 group-hover:text-indigo-700 break-words line-clamp-2 leading-tight">{item.name}</p>
+                    {item.purchaseCode && <p className="text-xs text-slate-500 mt-0.5">{item.purchaseCode}</p>}
+                  </div>
+                  <div className="flex flex-col items-end shrink-0">
+                    <p className="font-semibold text-indigo-600">₹{parseFloat(item.price || 0).toFixed(2)}</p>
+                    <span className="text-[10px] font-medium text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity mt-1 bg-indigo-100 px-1.5 py-0.5 rounded">Add</span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
 
