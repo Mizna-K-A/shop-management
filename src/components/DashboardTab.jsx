@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DashboardTab = ({ items, currentFileIndex, fileItemsCount }) => {
+const DashboardTab = ({ items }) => {
   const totalItems = items.length;
   const totalPieces = items.reduce((sum, item) => sum + item.pieces, 0);
   const totalValue = items.reduce((sum, item) => sum + (item.price * item.pieces), 0);
@@ -19,30 +19,6 @@ const DashboardTab = ({ items, currentFileIndex, fileItemsCount }) => {
     <div className="p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-6 md:mb-8 tracking-tight">Dashboard</h2>
-        
-        {/* File Info */}
-        <div className="bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl shadow-xl shadow-indigo-200/50 p-6 md:p-8 mb-8 text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-10 blur-3xl"></div>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <div className="text-sm opacity-90">Current Working File</div>
-              <div className="text-3xl font-bold">f{currentFileIndex}</div>
-              <div className="text-sm mt-2">
-                {fileItemsCount}/100 items used
-              </div>
-            </div>
-            <div className="text-left sm:text-right w-full sm:w-auto border-t border-white/20 sm:border-0 pt-4 sm:pt-0 mt-2 sm:mt-0">
-              <div className="text-sm opacity-90">Storage Status</div>
-              <div className="text-2xl font-bold">{100 - fileItemsCount} slots left</div>
-            </div>
-          </div>
-          <div className="mt-4 bg-white bg-opacity-20 rounded-full h-2 overflow-hidden">
-            <div 
-              className="bg-white h-full rounded-full transition-all duration-300"
-              style={{ width: `${(fileItemsCount / 100) * 100}%` }}
-            />
-          </div>
-        </div>
         
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
