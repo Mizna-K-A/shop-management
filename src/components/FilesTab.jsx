@@ -1,4 +1,5 @@
 import React from 'react';
+import Swal from 'sweetalert2';
 
 const FilesTab = ({ onReset, items, onImportBackup }) => {
 
@@ -22,9 +23,19 @@ const FilesTab = ({ onReset, items, onImportBackup }) => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      alert(`Backup created: ${backupFileName}`);
+      Swal.fire({
+        icon: 'success',
+        title: 'Backup Created',
+        text: `Backup created: ${backupFileName}`,
+        confirmButtonColor: '#10b981'
+      });
     } catch (error) {
-      alert('Error creating backup');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error creating backup',
+        confirmButtonColor: '#4f46e5'
+      });
     }
   };
 
@@ -38,12 +49,27 @@ const FilesTab = ({ onReset, items, onImportBackup }) => {
         const data = JSON.parse(e.target.result);
         if (data.items && Array.isArray(data.items)) {
           onImportBackup(data.items);
-          alert('Backup imported successfully');
+          Swal.fire({
+            icon: 'success',
+            title: 'Imported',
+            text: 'Backup imported successfully',
+            confirmButtonColor: '#10b981'
+          });
         } else {
-          alert('Invalid backup file format');
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid Format',
+            text: 'Invalid backup file format',
+            confirmButtonColor: '#4f46e5'
+          });
         }
       } catch (error) {
-        alert('Error importing backup');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error importing backup',
+          confirmButtonColor: '#4f46e5'
+        });
       }
     };
     reader.readAsText(file);

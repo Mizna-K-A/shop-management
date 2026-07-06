@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 
 const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
   const [editingId, setEditingId] = useState(null);
@@ -20,7 +21,12 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
     const pieces = parseInt(editPieces);
     
     if (!editName.trim() || isNaN(price) || price <= 0 || isNaN(pieces) || pieces < 1) {
-      alert('Invalid input');
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Input',
+        text: 'Please enter valid details for the item.',
+        confirmButtonColor: '#4f46e5'
+      });
       return;
     }
     

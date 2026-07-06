@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 
 const BillingTab = ({ items = [] }) => {
   const [customerName, setCustomerName] = useState('');
@@ -19,7 +20,12 @@ const BillingTab = ({ items = [] }) => {
     const quantity = 1;
 
     if (isNaN(price) || price <= 0) {
-      alert('Item has an invalid price.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Price',
+        text: 'Item has an invalid price.',
+        confirmButtonColor: '#4f46e5'
+      });
       return;
     }
 
@@ -39,7 +45,12 @@ const BillingTab = ({ items = [] }) => {
     const quantity = parseInt(itemQuantity);
     
     if (!itemName.trim() || isNaN(price) || price <= 0 || isNaN(quantity) || quantity < 1) {
-      alert('Please enter valid item details.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Details',
+        text: 'Please enter valid item details.',
+        confirmButtonColor: '#4f46e5'
+      });
       return;
     }
     
@@ -61,7 +72,7 @@ const BillingTab = ({ items = [] }) => {
   const removeItem = (id) => setBillItems(billItems.filter(item => item.id !== id));
   
   const clearBill = () => {
-    if (billItems.length === 0 || window.confirm('Are you sure you want to clear the current bill and start a new one?')) {
+    if (billItems.length === 0) {
       setCustomerName('');
       setCustomerPhone('');
       setBillItems([]);
@@ -71,12 +82,40 @@ const BillingTab = ({ items = [] }) => {
       const nextNumStr = nextNum.toString();
       setBillNumber(nextNumStr);
       localStorage.setItem('lastBillNumber', nextNumStr);
+      return;
     }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Are you sure you want to clear the current bill and start a new one?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, clear it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setCustomerName('');
+        setCustomerPhone('');
+        setBillItems([]);
+        setDiscount('');
+        
+        const nextNum = (parseInt(billNumber, 10) || 1000) + 1;
+        const nextNumStr = nextNum.toString();
+        setBillNumber(nextNumStr);
+        localStorage.setItem('lastBillNumber', nextNumStr);
+      }
+    });
   };
 
   const printBill = () => {
     if (billItems.length === 0) {
-      alert('Please add items to the bill before printing.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Empty Bill',
+        text: 'Please add items to the bill before printing.',
+        confirmButtonColor: '#4f46e5'
+      });
       return;
     }
     

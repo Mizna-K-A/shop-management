@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 
 const AddItemTab = ({ onAddItem, loading }) => {
   const [itemName, setItemName] = useState('');
@@ -11,7 +12,12 @@ const AddItemTab = ({ onAddItem, loading }) => {
     const price = parseFloat(itemPrice);
     
     if (!itemName.trim() || isNaN(price) || price <= 0) {
-      alert('Please fill all fields correctly');
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Input',
+        text: 'Please fill all fields correctly',
+        confirmButtonColor: '#4f46e5'
+      });
       return;
     }
     

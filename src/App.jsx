@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import Sidebar from './components/Sidebar';
 import AddItemTab from './components/AddItemTab';
 import ItemsListTab from './components/ItemsListTab';
@@ -40,9 +41,19 @@ function App() {
   };
 
   const deleteItem = (id) => {
-    if (window.confirm('Delete this item?')) {
-      setItems(prevItems => prevItems.filter(i => i.id !== id));
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Delete this item?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setItems(prevItems => prevItems.filter(i => i.id !== id));
+      }
+    });
   };
 
   const updateItem = (id, updatedItem) => {
@@ -52,9 +63,19 @@ function App() {
   };
 
   const resetAllItems = () => {
-    if (window.confirm('Are you sure you want to reset all items?')) {
-      setItems([]);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Are you sure you want to reset all items?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, reset all!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setItems([]);
+      }
+    });
   };
 
   return (
