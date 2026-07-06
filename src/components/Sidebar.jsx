@@ -1,4 +1,5 @@
 import React from 'react';
+import logoWithName from '../assets/logo-with-name.png';
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
   const tabs = [
@@ -13,7 +14,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
       <div className="p-4 md:p-6 flex justify-between items-center md:block border-b border-green-100">
         <div>
           <img
-            src="/logo-with-name.png"
+            src={logoWithName}
             alt="Look Fancy"
             className="h-14 md:h-20 w-auto object-contain"
           />
