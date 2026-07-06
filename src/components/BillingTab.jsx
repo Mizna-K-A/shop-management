@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const BillingTab = ({ items = [] }) => {
   const [customerName, setCustomerName] = useState('');
@@ -130,6 +132,105 @@ const BillingTab = ({ items = [] }) => {
     window.addEventListener('afterprint', handleAfterPrint);
     window.print();
   };
+
+  const saveBillToFile = () => {
+    if (billItems.length === 0) {
+      Swal.fire({ icon: 'warning', title: 'Empty Bill', text: 'Please add items to the bill before saving.', confirmButtonColor: '#4f46e5' });
+      return;
+    }
+
+    const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+    const pageW = 210;
+    const margin = 15;
+    let y = 20;
+
+    // ── Header ──
+    doc.setFontSize(20); doc.setFont('helvetica', 'bold');
+    doc.text('ESTIMATE', margin, y);
+    doc.text('Look Fancy', pageW - margin, y, { align: 'right' });
+    y += 7;
+    doc.setFontSize(10); doc.setFont('helvetica', 'normal'); doc.setTextColor(90, 90, 90);
+    doc.text('Bill #' + billNumber + '   |   Date: ' + formatDate(new Date()), margin, y);
+    doc.text('Moonupeedika Beach Road  |  Ph: 7012479127', pageW - margin, y, { align: 'right' });
+    doc.setTextColor(0, 0, 0);
+    y += 8;
+
+    // ── Divider ──
+    doc.setDrawColor(180, 180, 180); doc.setLineWidth(0.3);
+    doc.line(margin, y, pageW - margin, y);
+    y += 5;
+
+    // ── Items Table ──
+    const itemRows = billItems.map(item => [
+      item.name + (item.purchaseCode ? '\n(' + item.purchaseCode + ')' : ''),
+      { content: String(item.quantity), styles: { halign: 'center' } },
+      { content: 'Rs ' + item.price.toFixed(2), styles: { halign: 'right' } },
+      { content: 'Rs ' + item.subtotal.toFixed(2), styles: { halign: 'right' } }
+    ]);
+
+    autoTable(doc, {
+      startY: y,
+      head: [['Item', 'Qty', 'Unit Price', 'Amount']],
+      body: itemRows,
+      theme: 'striped',
+      styles: { fontSize: 10, cellPadding: 3, textColor: [0, 0, 0] },
+      headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 10 },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+      columnStyles: {
+        0: { cellWidth: 'auto' },
+        1: { cellWidth: 18, halign: 'center' },
+        2: { cellWidth: 35, halign: 'right' },
+        3: { cellWidth: 35, halign: 'right' }
+      },
+      margin: { left: margin, right: margin }
+    });
+
+    y = doc.lastAutoTable.finalY + 8;
+
+    // ── Totals (separate section, right-aligned, never overlaps) ──
+    const subTot = billItems.reduce((s, i) => s + i.subtotal, 0);
+    const disc   = parseFloat(discount) || 0;
+    const grand  = Math.max(0, subTot - disc);
+
+    const colLabel = pageW - margin - 55;
+    const colValue = pageW - margin;
+
+    doc.setFontSize(10); doc.setFont('helvetica', 'normal');
+
+    if (disc > 0) {
+      doc.setTextColor(60, 60, 60);
+      doc.text('Subtotal', colLabel, y);
+      doc.text('Rs ' + subTot.toFixed(2), colValue, y, { align: 'right' });
+      y += 6;
+
+      doc.setTextColor(200, 30, 30);
+      doc.text('Discount', colLabel, y);
+      doc.text('- Rs ' + disc.toFixed(2), colValue, y, { align: 'right' });
+      y += 6;
+      doc.setTextColor(0, 0, 0);
+    }
+
+    // Grand Total highlighted box
+    const boxX = colLabel - 4;
+    const boxW = colValue - boxX + 2;
+    doc.setFillColor(15, 23, 42);
+    doc.roundedRect(boxX, y - 5, boxW, 11, 1.5, 1.5, 'F');
+    doc.setFontSize(12); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
+    doc.text('TOTAL', colLabel, y + 2);
+    doc.text('Rs ' + grand.toFixed(2), colValue, y + 2, { align: 'right' });
+    doc.setTextColor(0, 0, 0);
+
+    doc.save('Bill_' + billNumber + '.pdf');
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Saved Successfully',
+      text: 'Bill_' + billNumber + '.pdf has been saved to your computer.',
+      confirmButtonColor: '#10b981'
+    });
+  };
+
+
 
   const subtotal = billItems.reduce((sum, item) => sum + item.subtotal, 0);
   const discountAmount = parseFloat(discount) || 0;
@@ -389,6 +490,9 @@ const BillingTab = ({ items = [] }) => {
           <button onClick={clearBill} className="w-full sm:w-auto px-5 py-2 border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 font-medium">
             Clear Bill
           </button>
+          <button onClick={saveBillToFile} disabled={billItems.length === 0} className="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium disabled:opacity-50">
+            💾 Save PDF
+          </button>
           <button onClick={printBill} disabled={billItems.length === 0} className="w-full sm:w-auto px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 font-medium disabled:opacity-50">
             🖨️ Print
           </button>
@@ -396,7 +500,7 @@ const BillingTab = ({ items = [] }) => {
       </div>
 
       {/* Print-specific styles */}
-      <style jsx global>{`
+      <style>{`
         @media print {
           @page {
             size: 80mm auto; /* 3-inch thermal paper */

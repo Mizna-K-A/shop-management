@@ -25,14 +25,9 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
-            src: 'https://via.placeholder.com/192',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'https://via.placeholder.com/512',
-            sizes: '512x512',
-            type: 'image/png'
+            src: '/favicon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml'
           }
         ]
       }
