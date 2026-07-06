@@ -46,10 +46,10 @@ const DashboardTab = ({ items }) => {
           ) : (
             <div className="space-y-4">
               {recentItems.map((item) => (
-                <div key={item.id} className="group p-4 rounded-xl border border-slate-100 hover:border-indigo-100 hover:bg-indigo-50/30 transition-all duration-200">
+                <div key={item.id} className="group p-4 rounded-xl border border-slate-100 hover:border-green-100 hover:bg-green-50/30 transition-all duration-200">
                   <div className="flex justify-between items-start">
                     <div>
-                      <div className="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{item.name}</div>
+                      <div className="font-bold text-slate-800 group-hover:text-green-700 transition-colors">{item.name}</div>
                       <div className="text-sm text-slate-500 mt-1">
                         <span className="inline-block bg-slate-100 rounded-md px-2 py-0.5 text-xs font-medium mr-2">{item.pieces} pieces</span>
                         × ₹{item.price.toFixed(2)}

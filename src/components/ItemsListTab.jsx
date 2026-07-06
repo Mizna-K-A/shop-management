@@ -171,7 +171,7 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
                       )}
                     </td>
                     <td className="px-4 py-2.5">
-                      <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full text-xs font-semibold">{item.pieces}</span>
+                      <span className="bg-green-50 text-green-700 px-2 py-0.5 rounded-full text-xs font-semibold">{item.pieces}</span>
                     </td>
                     <td className="px-4 py-2.5 text-slate-600 font-medium text-sm">₹{item.price.toFixed(2)}</td>
                     <td className="px-4 py-2.5 font-bold text-emerald-600 text-sm">
@@ -181,7 +181,7 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
                     <td className="px-4 py-2.5 text-right">
                       <button
                         onClick={() => startEdit(item)}
-                        className="text-indigo-600 hover:text-indigo-800 font-semibold text-sm mr-3 transition-colors"
+                        className="text-green-700 hover:text-green-900 font-semibold text-sm mr-3 transition-colors"
                       >
                         Edit
                       </button>

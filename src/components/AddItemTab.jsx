@@ -47,7 +47,7 @@ const AddItemTab = ({ onAddItem, loading }) => {
               type="text"
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all focus:bg-white"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 transition-all focus:bg-white"
               placeholder="Enter item name"
               disabled={loading}
             />
@@ -61,7 +61,7 @@ const AddItemTab = ({ onAddItem, loading }) => {
               type="text"
               value={purchaseCode}
               onChange={(e) => setPurchaseCode(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all focus:bg-white"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 transition-all focus:bg-white"
               placeholder="Enter purchase code"
               disabled={loading}
             />
@@ -75,7 +75,7 @@ const AddItemTab = ({ onAddItem, loading }) => {
               type="number"
               value={itemPrice}
               onChange={(e) => setItemPrice(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all focus:bg-white"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 transition-all focus:bg-white"
               placeholder="0.00"
               min="0"
               step="0.01"
@@ -86,17 +86,17 @@ const AddItemTab = ({ onAddItem, loading }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-3.5 rounded-xl hover:shadow-lg hover:shadow-indigo-200/50 hover:-translate-y-0.5 transition-all duration-200 font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="w-full bg-green-800 text-white py-3.5 rounded-xl hover:bg-green-700 hover:shadow-lg hover:shadow-green-200/50 hover:-translate-y-0.5 transition-all duration-200 font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             {loading ? 'Adding...' : 'Add Item'}
           </button>
         </form>
         
-        <div className="mt-8 bg-indigo-50 border border-indigo-100 rounded-2xl p-6">
-          <h3 className="font-bold text-indigo-900 mb-3 flex items-center gap-2">
+        <div className="mt-8 bg-green-50 border border-green-100 rounded-2xl p-6">
+          <h3 className="font-bold text-green-900 mb-3 flex items-center gap-2">
             <span className="text-xl">💡</span> Quick Tips
           </h3>
-          <ul className="text-sm text-indigo-800/80 space-y-2">
+          <ul className="text-sm text-green-800/80 space-y-2">
             <li className="flex items-center gap-2"><span>•</span> Items will be automatically saved when reaching 100 items</li>
             <li className="flex items-center gap-2"><span>•</span> Each file can hold up to 100 items</li>
             <li className="flex items-center gap-2"><span>•</span> You can manually save items from the Files tab</li>

@@ -268,7 +268,7 @@ const BillingTab = ({ items = [] }) => {
                   setBillNumber(e.target.value);
                   localStorage.setItem('lastBillNumber', e.target.value);
                 }}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 font-semibold"
               />
             </div>
             <div className="flex items-center gap-3">
@@ -288,14 +288,14 @@ const BillingTab = ({ items = [] }) => {
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               placeholder="Customer name"
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             /> */}
             {/* <input
               type="text"
               value={customerPhone}
               onChange={(e) => setCustomerPhone(e.target.value)}
               placeholder="Phone number"
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             /> */}
           </div>
         </div>
@@ -317,7 +317,7 @@ const BillingTab = ({ items = [] }) => {
                 }
               }}
               placeholder="Item name"
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             />
             <datalist id="inventory-items">
               {items.map((item, idx) => <option key={idx} value={item.name} />)}
@@ -327,7 +327,7 @@ const BillingTab = ({ items = [] }) => {
               value={itemPurchaseCode}
               onChange={(e) => setItemPurchaseCode(e.target.value)}
               placeholder="Purchase code (optional)"
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             />
             <div className="flex flex-col sm:flex-row gap-3">
               <input
@@ -337,7 +337,7 @@ const BillingTab = ({ items = [] }) => {
                 placeholder="Price"
                 step="0.01"
                 min="0"
-                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
               />             
             </div>
               <input
@@ -345,9 +345,9 @@ const BillingTab = ({ items = [] }) => {
                 value={itemQuantity}
                 onChange={(e) => setItemQuantity(e.target.value)}
                 min="1"
-                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
               />
-            <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 font-semibold transition">
+            <button type="submit" className="w-full bg-green-800 text-white py-2 rounded-lg hover:bg-green-700 font-semibold transition">
               Add to Bill
             </button>
           </form>
@@ -364,7 +364,7 @@ const BillingTab = ({ items = [] }) => {
               placeholder="Search items..."
               value={itemSearchTerm}
               onChange={(e) => setItemSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 text-sm"
             />
           </div>
           <div className="overflow-y-auto space-y-2 pr-1 flex-1">
@@ -375,15 +375,15 @@ const BillingTab = ({ items = [] }) => {
                 <div 
                   key={idx} 
                   onClick={() => handleQuickAdd(item)}
-                  className="p-3 border border-slate-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 cursor-pointer transition flex justify-between items-center group"
+                  className="p-3 border border-slate-200 rounded-lg hover:border-green-600 hover:bg-green-50 cursor-pointer transition flex justify-between items-center group"
                 >
                   <div className="flex-1 mr-2">
-                    <p className="font-medium text-slate-800 group-hover:text-indigo-700 break-words line-clamp-2 leading-tight">{item.name}</p>
+                    <p className="font-medium text-slate-800 group-hover:text-green-700 break-words line-clamp-2 leading-tight">{item.name}</p>
                     {item.purchaseCode && <p className="text-xs text-slate-500 mt-0.5">{item.purchaseCode}</p>}
                   </div>
                   <div className="flex flex-col items-end shrink-0">
-                    <p className="font-semibold text-indigo-600">₹{parseFloat(item.price || 0).toFixed(2)}</p>
-                    <span className="text-[10px] font-medium text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity mt-1 bg-indigo-100 px-1.5 py-0.5 rounded">Add</span>
+                    <p className="font-semibold text-green-600">₹{parseFloat(item.price || 0).toFixed(2)}</p>
+                    <span className="text-[10px] font-medium text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity mt-1 bg-green-100 px-1.5 py-0.5 rounded">Add</span>
                   </div>
                 </div>
               ))
@@ -409,7 +409,7 @@ const BillingTab = ({ items = [] }) => {
                 </p>
               </div>
               <div className="text-right print:text-center print:w-full print:mt-1">
-                <h1 className="text-xl font-bold text-indigo-600 print:text-sm print:font-extrabold print:text-black print:tracking-wider">Look Fancy</h1>
+                <h1 className="text-xl font-bold text-green-600 print:text-sm print:font-extrabold print:text-black print:tracking-wider">Look Fancy</h1>
                 <p className="text-xs text-gray-500 print:text-[10px] print:font-bold print:text-black">Moonupeedika Beach Road</p>
                 <p className="text-xs text-gray-500 print:text-[10px] print:font-bold print:text-black">Phone: 7012479127</p>
               </div>
@@ -479,7 +479,7 @@ const BillingTab = ({ items = [] }) => {
               )}
               <div className="flex justify-between w-full max-w-xs print:max-w-full print:border-t-2 print:border-black print:pt-0.5 print:mt-0.5">
                 <p className="text-sm text-gray-500 print:text-sm print:font-extrabold print:text-black print:tracking-wider">TOTAL</p>
-                <p className="text-2xl font-bold text-indigo-600 print:text-base print:font-black print:text-black print:tracking-wider">₹{grandTotal.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-green-600 print:text-base print:font-black print:text-black print:tracking-wider">₹{grandTotal.toFixed(2)}</p>
               </div>
             </div>
           </div>         

@@ -17,17 +17,17 @@ export default defineConfig({
         enabled: true
       },
       manifest: {
-        name: 'Shop Management App',
-        short_name: 'ShopManager',
-        description: 'Offline-first Shop Management Application',
+        name: 'Look Fancy',
+        short_name: 'Look Fancy',
+        description: 'Look Fancy Shop Management',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
         icons: [
           {
-            src: '/favicon.svg',
+            src: '/logo.png',
             sizes: 'any',
-            type: 'image/svg+xml'
+            type: 'image/png'
           }
         ]
       }
