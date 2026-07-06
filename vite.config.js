@@ -16,19 +16,6 @@ export default defineConfig({
       devOptions: {
         enabled: true
       },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
-        runtimeCaching: [
-          {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'images-cache',
-              expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 365 }
-            }
-          }
-        ]
-      },
       manifest: {
         name: 'Look Fancy',
         short_name: 'Look Fancy',
