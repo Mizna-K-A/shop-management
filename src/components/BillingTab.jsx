@@ -60,7 +60,7 @@ const BillingTab = ({ items = [] }) => {
 
   const removeItem = (id) => setBillItems(billItems.filter(item => item.id !== id));
   
-  const startNewBill = () => {
+  const clearBill = () => {
     if (billItems.length === 0 || window.confirm('Are you sure you want to clear the current bill and start a new one?')) {
       setCustomerName('');
       setCustomerPhone('');
@@ -79,6 +79,16 @@ const BillingTab = ({ items = [] }) => {
       alert('Please add items to the bill before printing.');
       return;
     }
+    
+    const originalTitle = document.title;
+    document.title = `Bill_${billNumber}`;
+    
+    const handleAfterPrint = () => {
+      document.title = originalTitle;
+      window.removeEventListener('afterprint', handleAfterPrint);
+    };
+    
+    window.addEventListener('afterprint', handleAfterPrint);
     window.print();
   };
 
@@ -337,8 +347,8 @@ const BillingTab = ({ items = [] }) => {
 
         {/* Actions */}
         <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3 print:hidden">
-          <button onClick={startNewBill} className="w-full sm:w-auto px-5 py-2 border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 font-medium">
-            New Bill
+          <button onClick={clearBill} className="w-full sm:w-auto px-5 py-2 border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 font-medium">
+            Clear Bill
           </button>
           <button onClick={printBill} disabled={billItems.length === 0} className="w-full sm:w-auto px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 font-medium disabled:opacity-50">
             🖨️ Print
