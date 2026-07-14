@@ -37,6 +37,7 @@ const BillingTab = ({ items = [] }) => {
       purchaseCode: item.purchaseCode || '',
       price,
       quantity,
+      itemDiscount: 0,
       subtotal: price * quantity
     }]);
   };
@@ -62,6 +63,7 @@ const BillingTab = ({ items = [] }) => {
       purchaseCode: itemPurchaseCode.trim(),
       price,
       quantity,
+      itemDiscount: 0,
       subtotal: price * quantity
     }]);
     
@@ -72,6 +74,15 @@ const BillingTab = ({ items = [] }) => {
   };
 
   const removeItem = (id) => setBillItems(billItems.filter(item => item.id !== id));
+
+  const updateItemDiscount = (id, value) => {
+    setBillItems(prev => prev.map(item => {
+      if (item.id !== id) return item;
+      const disc = Math.max(0, parseFloat(value) || 0);
+      const subtotal = Math.max(0, item.price * item.quantity - disc);
+      return { ...item, itemDiscount: disc, subtotal };
+    }));
+  };
   
   const clearBill = () => {
     if (billItems.length === 0) {
@@ -165,12 +176,16 @@ const BillingTab = ({ items = [] }) => {
       item.name + (item.purchaseCode ? '\n(' + item.purchaseCode + ')' : ''),
       { content: String(item.quantity), styles: { halign: 'center' } },
       { content: 'Rs ' + item.price.toFixed(2), styles: { halign: 'right' } },
+      {
+        content: item.itemDiscount > 0 ? '- Rs ' + item.itemDiscount.toFixed(2) : '-',
+        styles: { halign: 'right', textColor: item.itemDiscount > 0 ? [200, 30, 30] : [160, 160, 160] }
+      },
       { content: 'Rs ' + item.subtotal.toFixed(2), styles: { halign: 'right' } }
     ]);
 
     autoTable(doc, {
       startY: y,
-      head: [['Item', 'Qty', 'Unit Price', 'Amount']],
+      head: [['Item', 'Qty', 'Unit Price', 'Discount', 'Amount']],
       body: itemRows,
       theme: 'striped',
       styles: { fontSize: 10, cellPadding: 3, textColor: [0, 0, 0] },
@@ -179,8 +194,9 @@ const BillingTab = ({ items = [] }) => {
       columnStyles: {
         0: { cellWidth: 'auto' },
         1: { cellWidth: 18, halign: 'center' },
-        2: { cellWidth: 35, halign: 'right' },
-        3: { cellWidth: 35, halign: 'right' }
+        2: { cellWidth: 32, halign: 'right' },
+        3: { cellWidth: 32, halign: 'right' },
+        4: { cellWidth: 32, halign: 'right' }
       },
       margin: { left: margin, right: margin }
     });
@@ -188,8 +204,11 @@ const BillingTab = ({ items = [] }) => {
     y = doc.lastAutoTable.finalY + 8;
 
     // ── Totals (separate section, right-aligned, never overlaps) ──
+    const rawSubTot = billItems.reduce((s, i) => s + i.price * i.quantity, 0);
+    const itemDiscTotal = billItems.reduce((s, i) => s + (i.itemDiscount || 0), 0);
     const subTot = billItems.reduce((s, i) => s + i.subtotal, 0);
     const disc   = parseFloat(discount) || 0;
+    const totalSaved = disc + itemDiscTotal;
     const grand  = Math.max(0, subTot - disc);
 
     const colLabel = pageW - margin - 55;
@@ -197,16 +216,32 @@ const BillingTab = ({ items = [] }) => {
 
     doc.setFontSize(10); doc.setFont('helvetica', 'normal');
 
-    if (disc > 0) {
+    if (totalSaved > 0) {
       doc.setTextColor(60, 60, 60);
       doc.text('Subtotal', colLabel, y);
-      doc.text('Rs ' + subTot.toFixed(2), colValue, y, { align: 'right' });
+      doc.text('Rs ' + rawSubTot.toFixed(2), colValue, y, { align: 'right' });
       y += 6;
 
-      doc.setTextColor(200, 30, 30);
-      doc.text('Discount', colLabel, y);
-      doc.text('- Rs ' + disc.toFixed(2), colValue, y, { align: 'right' });
+      if (itemDiscTotal > 0) {
+        doc.setTextColor(200, 30, 30);
+        doc.text('Total Discount', colLabel, y);
+        doc.text('- Rs ' + itemDiscTotal.toFixed(2), colValue, y, { align: 'right' });
+        y += 6;
+      }
+
+      if (disc > 0) {
+        doc.setTextColor(200, 30, 30);
+        doc.text('Extra Discount', colLabel, y);
+        doc.text('- Rs ' + disc.toFixed(2), colValue, y, { align: 'right' });
+        y += 6;
+      }
+
+      doc.setTextColor(20, 160, 80);
+      doc.setFont('helvetica', 'bold');
+      doc.text('You Saved', colLabel, y);
+      doc.text('Rs ' + totalSaved.toFixed(2), colValue, y, { align: 'right' });
       y += 6;
+      doc.setFont('helvetica', 'normal');
       doc.setTextColor(0, 0, 0);
     }
 
@@ -232,8 +267,11 @@ const BillingTab = ({ items = [] }) => {
 
 
 
+  const rawSubtotal = billItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const itemDiscountTotal = billItems.reduce((sum, item) => sum + (item.itemDiscount || 0), 0);
   const subtotal = billItems.reduce((sum, item) => sum + item.subtotal, 0);
   const discountAmount = parseFloat(discount) || 0;
+  const totalSaved = discountAmount + itemDiscountTotal;
   const grandTotal = Math.max(0, subtotal - discountAmount);
 
   const filteredItems = items.filter(item => 
@@ -421,21 +459,22 @@ const BillingTab = ({ items = [] }) => {
             </div> */}
           </div>
 
-          {/* Items Table - Table header border removed */}
+          {/* Items Table */}
           <div className="overflow-x-auto print:overflow-visible">
-            <table className="w-full text-sm min-w-[500px] print:min-w-0 print:text-xs">
+            <table className="w-full text-sm min-w-[560px] print:min-w-0 print:text-[10px]">
               <thead className="print:border-none">
                 <tr className="text-gray-500 print:text-black print:font-extrabold">
                   <th className="py-0.5 text-left print:py-0.5 print:pl-0 print:text-[10px]">Item</th>
                   <th className="py-0.5 text-center w-12 print:w-8 print:py-0.5 print:text-[10px]">Qty</th>
                   <th className="py-0.5 text-right w-20 print:w-14 print:py-0.5 print:text-[10px]">Price</th>
+                  <th className="py-0.5 text-right w-20 print:w-14 print:py-0.5 print:text-[10px]">Disc(₹)</th>
                   <th className="py-0.5 text-right w-24 print:w-16 print:py-0.5 print:text-[10px]">Total</th>
                   <th className="py-0.5 w-8 print:hidden"></th>
                 </tr>
               </thead>
               <tbody className="print:divide-y-0">
                 {billItems.length === 0 ? (
-                  <tr><td colSpan="5" className="py-2 text-center text-gray-400 print:py-1 print:text-[10px] print:font-bold print:text-black">No items added</td></tr>
+                  <tr><td colSpan="6" className="py-2 text-center text-gray-400 print:py-1 print:text-[10px] print:font-bold print:text-black">No items added</td></tr>
                 ) : (
                   billItems.map((item) => (
                     <tr key={item.id} className="print:border-none">
@@ -451,6 +490,23 @@ const BillingTab = ({ items = [] }) => {
                       </td>
                       <td className="py-0.5 text-center print:py-0.5 print:text-[10px] print:font-bold">{item.quantity}</td>
                       <td className="py-0.5 text-right print:py-0.5 print:text-[10px] print:font-bold">₹{item.price.toFixed(2)}</td>
+                      {/* Disc column: input on screen, text on print */}
+                      <td className="py-0.5 text-right print:py-0.5 print:text-[10px] print:font-bold">
+                        <span className="hidden print:inline print:text-rose-600">
+                          {item.itemDiscount > 0 ? '-₹' + item.itemDiscount.toFixed(2) : '-'}
+                        </span>
+                        <span className="print:hidden">
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={item.itemDiscount === 0 ? '' : item.itemDiscount}
+                            onChange={(e) => updateItemDiscount(item.id, e.target.value)}
+                            placeholder="0"
+                            className="w-16 px-1.5 py-0.5 text-right text-sm border border-rose-200 rounded-md bg-rose-50 focus:outline-none focus:ring-1 focus:ring-rose-400 text-rose-600 font-semibold"
+                          />
+                        </span>
+                      </td>
                       <td className="py-0.5 text-right font-semibold print:py-0.5 print:text-[10px] print:font-extrabold">₹{item.subtotal.toFixed(2)}</td>
                       <td className="py-0.5 text-right print:hidden">
                         <button onClick={() => removeItem(item.id)} className="text-red-400 hover:text-red-600">✕</button>
@@ -465,15 +521,27 @@ const BillingTab = ({ items = [] }) => {
           {/* Total */}
           <div className="border-t border-slate-200 pt-2 mt-2 print:border-t-4 print:border-black print:pt-1 print:mt-1">
             <div className="flex flex-col items-end gap-0.5 print:w-full">
-              {discountAmount > 0 && (
+              {totalSaved > 0 && (
                 <>
                   <div className="flex justify-between w-full max-w-xs print:max-w-full">
                     <p className="text-sm text-gray-500 print:text-[10px] print:font-extrabold print:text-black">Subtotal</p>
-                    <p className="text-sm font-medium text-slate-700 print:text-[10px] print:font-extrabold print:text-black">₹{subtotal.toFixed(2)}</p>
+                    <p className="text-sm font-medium text-slate-700 print:text-[10px] print:font-extrabold print:text-black">₹{rawSubtotal.toFixed(2)}</p>
                   </div>
-                  <div className="flex justify-between w-full max-w-xs print:max-w-full">
-                    <p className="text-sm text-rose-500 print:text-[10px] print:font-extrabold print:text-black">Discount</p>
-                    <p className="text-sm font-medium text-rose-500 print:text-[10px] print:font-extrabold print:text-black">- ₹{discountAmount.toFixed(2)}</p>
+                  {itemDiscountTotal > 0 && (
+                    <div className="flex justify-between w-full max-w-xs print:max-w-full">
+                      <p className="text-sm text-rose-500 print:text-[10px] print:font-extrabold print:text-black">Total Discount</p>
+                      <p className="text-sm font-medium text-rose-500 print:text-[10px] print:font-extrabold print:text-black">- ₹{itemDiscountTotal.toFixed(2)}</p>
+                    </div>
+                  )}
+                  {discountAmount > 0 && (
+                    <div className="flex justify-between w-full max-w-xs print:max-w-full">
+                      <p className="text-sm text-rose-500 print:text-[10px] print:font-extrabold print:text-black">Extra Discount</p>
+                      <p className="text-sm font-medium text-rose-500 print:text-[10px] print:font-extrabold print:text-black">- ₹{discountAmount.toFixed(2)}</p>
+                    </div>
+                  )}
+                  <div className="flex justify-between w-full max-w-xs print:max-w-full mt-0.5 print:mt-0">
+                    <p className="text-sm font-semibold text-emerald-600 print:text-[10px] print:font-extrabold print:text-black">🎉 You Saved</p>
+                    <p className="text-sm font-bold text-emerald-600 print:text-[10px] print:font-extrabold print:text-black">₹{totalSaved.toFixed(2)}</p>
                   </div>
                 </>
               )}
