@@ -6,12 +6,13 @@ import ItemsListTab from './components/ItemsListTab';
 import FilesTab from './components/FilesTab';
 import DashboardTab from './components/DashboardTab';
 import BillingTab from './components/BillingTab';
+import PurchaseTab from './components/PurchaseTab';
 
 function App() {
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem('activeTab') || 'dashboard';
   });
-  
+
   const [items, setItems] = useState(() => {
     try {
       const savedItems = localStorage.getItem('shop_items');
@@ -36,7 +37,7 @@ function App() {
       totalPrice: item.price * item.pieces,
       date: new Date().toLocaleDateString()
     };
-    
+
     setItems(prevItems => [...prevItems, newItem]);
   };
 
@@ -57,7 +58,7 @@ function App() {
   };
 
   const updateItem = (id, updatedItem) => {
-    setItems(prevItems => prevItems.map(item => 
+    setItems(prevItems => prevItems.map(item =>
       item.id === id ? { ...item, ...updatedItem, totalPrice: updatedItem.price * updatedItem.pieces } : item
     ));
   };
@@ -81,23 +82,23 @@ function App() {
   return (
     <div className="flex flex-col md:flex-row h-screen bg-slate-50 print:block print:bg-white print:h-auto">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      
+
       <div className="flex-1 overflow-y-auto overflow-x-hidden print:overflow-visible">
         {activeTab === 'dashboard' && (
           <DashboardTab items={items} />
         )}
-        
+
         {activeTab === 'billing' && (
           <BillingTab items={items} />
         )}
-        
+
         {activeTab === 'items' && (
           <div className="p-4 lg:p-8 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
             <div className="lg:col-span-1">
               <AddItemTab onAddItem={addItem} loading={false} />
             </div>
             <div className="lg:col-span-2">
-              <ItemsListTab 
+              <ItemsListTab
                 items={items}
                 onDeleteItem={deleteItem}
                 onUpdateItem={updateItem}
@@ -105,9 +106,13 @@ function App() {
             </div>
           </div>
         )}
-        
+
+        {activeTab === 'purchase' && (
+          <PurchaseTab />
+        )}
+
         {activeTab === 'files' && (
-          <FilesTab 
+          <FilesTab
             onReset={resetAllItems}
             items={items}
             onImportBackup={(importedItems) => setItems(prev => {
