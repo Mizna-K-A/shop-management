@@ -18,6 +18,13 @@ const PurchaseTab = () => {
   const [filterType, setFilterType] = useState('all'); // all, daily, weekly, monthly, custom
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [search, setSearch] = useState('');
+
+  // Edit state
+  const [editingId, setEditingId] = useState(null);
+  const [editSupplier, setEditSupplier] = useState('');
+  const [editItemDesc, setEditItemDesc] = useState('');
+  const [editAmount, setEditAmount] = useState('');
 
   useEffect(() => {
     localStorage.setItem('shop_purchases', JSON.stringify(purchases));
@@ -75,42 +82,77 @@ const PurchaseTab = () => {
     });
   };
 
+  const startEdit = (p) => {
+    setEditingId(p.id);
+    setEditSupplier(p.supplier);
+    setEditItemDesc(p.itemDesc);
+    setEditAmount(p.amount.toString());
+  };
+
+  const saveEdit = (id) => {
+    const parsedAmount = parseFloat(editAmount);
+    if (!editSupplier.trim() || !editItemDesc.trim() || isNaN(parsedAmount) || parsedAmount <= 0) {
+      Swal.fire({ icon: 'error', title: 'Invalid Input', text: 'Please fill all fields correctly', confirmButtonColor: '#4f46e5' });
+      return;
+    }
+    setPurchases(prev => prev.map(p =>
+      p.id === id ? { ...p, supplier: editSupplier.trim(), itemDesc: editItemDesc.trim(), amount: parsedAmount } : p
+    ));
+    setEditingId(null);
+  };
+
+  const cancelEdit = () => setEditingId(null);
+
   const filteredPurchases = useMemo(() => {
-    if (filterType === 'all') return purchases;
+    let result = [...purchases];
 
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    if (filterType !== 'all') {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    return purchases.filter(p => {
-      const pDate = new Date(p.date);
-      const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
+      result = result.filter(p => {
+        const pDate = new Date(p.date);
+        const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
 
-      if (filterType === 'daily') {
-        return pDay.getTime() === today.getTime();
-      }
+        if (filterType === 'daily') return pDay.getTime() === today.getTime();
 
-      if (filterType === 'weekly') {
-        const lastWeek = new Date(today);
-        lastWeek.setDate(lastWeek.getDate() - 7);
-        return pDay >= lastWeek && pDay <= today;
-      }
+        if (filterType === 'weekly') {
+          const lastWeek = new Date(today);
+          lastWeek.setDate(lastWeek.getDate() - 7);
+          return pDay >= lastWeek && pDay <= today;
+        }
 
-      if (filterType === 'monthly') {
-        return pDate.getMonth() === now.getMonth() && pDate.getFullYear() === now.getFullYear();
-      }
+        if (filterType === 'monthly') {
+          return pDate.getMonth() === now.getMonth() && pDate.getFullYear() === now.getFullYear();
+        }
 
-      if (filterType === 'custom') {
-        if (!startDate || !endDate) return true;
-        const start = new Date(startDate);
-        start.setHours(0, 0, 0, 0);
-        const end = new Date(endDate);
-        end.setHours(23, 59, 59, 999);
-        return pDate >= start && pDate <= end;
-      }
+        if (filterType === 'custom') {
+          if (!startDate || !endDate) return true;
+          const start = new Date(startDate);
+          start.setHours(0, 0, 0, 0);
+          const end = new Date(endDate);
+          end.setHours(23, 59, 59, 999);
+          return pDate >= start && pDate <= end;
+        }
 
-      return true;
-    });
-  }, [purchases, filterType, startDate, endDate]);
+        return true;
+      });
+    }
+
+    // Search filter
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(p =>
+        p.supplier.toLowerCase().includes(q) ||
+        p.itemDesc.toLowerCase().includes(q)
+      );
+    }
+
+    // Alphabetical by supplier
+    result.sort((a, b) => a.supplier.localeCompare(b.supplier));
+
+    return result;
+  }, [purchases, filterType, startDate, endDate, search]);
 
   const totalAmount = filteredPurchases.reduce((sum, p) => sum + p.amount, 0);
 
@@ -265,7 +307,7 @@ const PurchaseTab = () => {
               <button
                 key={type}
                 onClick={() => setFilterType(type)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${filterType === type ? 'bg-green-600 text-green-800' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
+                className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${filterType === type ? 'bg-green-600 text-white' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
               >
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </button>
@@ -295,6 +337,20 @@ const PurchaseTab = () => {
             </div>
           </div>
         )}
+
+        {/* Search Bar */}
+        <div className="mb-4">
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search by supplier or item..."
+              className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-600/40 focus:border-green-600 transition-all"
+            />
+          </div>
+        </div>
 
         <div className="bg-white rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.04)] p-4 border border-slate-100 mb-6 flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -327,20 +383,59 @@ const PurchaseTab = () => {
             <tbody className="bg-white divide-y divide-slate-100">
               {filteredPurchases.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-8 text-slate-500">No purchase records found.</td>
+                  <td colSpan="5" className="text-center py-8 text-slate-500">
+                    {search ? 'No purchases match your search.' : 'No purchase records found.'}
+                  </td>
                 </tr>
               ) : (
                 filteredPurchases.map(p => (
                   <tr key={p.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-2.5 text-slate-500 text-xs font-medium">{new Date(p.date).toLocaleDateString()}</td>
-                    <td className="px-4 py-2.5 font-semibold text-slate-800 text-sm">{p.supplier}</td>
-                    <td className="px-4 py-2.5 text-slate-600 text-sm">{p.itemDesc}</td>
-                    <td className="px-4 py-2.5 font-bold text-red-600 text-sm">₹{p.amount.toFixed(2)}</td>
-                    <td className="px-4 py-2.5 text-right">
-                      <button onClick={() => handleDelete(p.id)} className="text-red-500 hover:text-red-700 font-semibold text-sm transition-colors">
-                        Delete
-                      </button>
-                    </td>
+                    {editingId === p.id ? (
+                      <>
+                        <td className="px-4 py-2 text-slate-500 text-xs font-medium">{new Date(p.date).toLocaleDateString()}</td>
+                        <td className="px-3 py-2">
+                          <input
+                            type="text"
+                            value={editSupplier}
+                            onChange={e => setEditSupplier(e.target.value)}
+                            className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                          />
+                        </td>
+                        <td className="px-3 py-2">
+                          <input
+                            type="text"
+                            value={editItemDesc}
+                            onChange={e => setEditItemDesc(e.target.value)}
+                            className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                          />
+                        </td>
+                        <td className="px-3 py-2">
+                          <input
+                            type="number"
+                            value={editAmount}
+                            onChange={e => setEditAmount(e.target.value)}
+                            className="w-24 px-2 py-1.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                            min="0"
+                            step="0.01"
+                          />
+                        </td>
+                        <td className="px-4 py-2 text-right whitespace-nowrap">
+                          <button onClick={() => saveEdit(p.id)} className="text-green-600 hover:text-green-800 font-semibold text-sm mr-2 transition-colors">Save</button>
+                          <button onClick={cancelEdit} className="text-slate-500 hover:text-slate-700 font-semibold text-sm transition-colors">Cancel</button>
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-4 py-2.5 text-slate-500 text-xs font-medium">{new Date(p.date).toLocaleDateString()}</td>
+                        <td className="px-4 py-2.5 font-semibold text-slate-800 text-sm">{p.supplier}</td>
+                        <td className="px-4 py-2.5 text-slate-600 text-sm">{p.itemDesc}</td>
+                        <td className="px-4 py-2.5 font-bold text-red-600 text-sm">₹{p.amount.toFixed(2)}</td>
+                        <td className="px-4 py-2.5 text-right whitespace-nowrap">
+                          <button onClick={() => startEdit(p)} className="text-green-700 hover:text-green-900 font-semibold text-sm mr-3 transition-colors">Edit</button>
+                          <button onClick={() => handleDelete(p.id)} className="text-red-500 hover:text-red-700 font-semibold text-sm transition-colors">Delete</button>
+                        </td>
+                      </>
+                    )}
                   </tr>
                 ))
               )}

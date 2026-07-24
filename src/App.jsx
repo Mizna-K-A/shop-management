@@ -7,6 +7,7 @@ import FilesTab from './components/FilesTab';
 import DashboardTab from './components/DashboardTab';
 import BillingTab from './components/BillingTab';
 import PurchaseTab from './components/PurchaseTab';
+import ExpenseTab from './components/ExpenseTab';
 
 function App() {
   const [activeTab, setActiveTab] = useState(() => {
@@ -109,6 +110,10 @@ function App() {
 
         {activeTab === 'purchase' && (
           <PurchaseTab />
+        )}
+
+        {activeTab === 'expense' && (
+          <ExpenseTab />
         )}
 
         {activeTab === 'files' && (

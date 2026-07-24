@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Swal from 'sweetalert2';
 
 const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
   const [editingId, setEditingId] = useState(null);
+  const [search, setSearch] = useState('');
   const [editName, setEditName] = useState('');
   const [editPurchaseCode, setEditPurchaseCode] = useState('');
   const [editPrice, setEditPrice] = useState('');
@@ -42,6 +43,19 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
 
   const totalValue = items.reduce((sum, item) => sum + (item.price * item.pieces), 0);
 
+  const filteredItems = useMemo(() => {
+    let result = [...items];
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(item =>
+        item.name.toLowerCase().includes(q) ||
+        (item.purchaseCode && item.purchaseCode.toLowerCase().includes(q))
+      );
+    }
+    result.sort((a, b) => a.name.localeCompare(b.name));
+    return result;
+  }, [items, search]);
+
   if (items.length === 0) {
     return (
       <div className="w-full">
@@ -58,6 +72,16 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
     <div className="w-full">
       <div className="mb-4">
         <h2 className="text-xl font-bold text-slate-800 mb-3 tracking-tight">Items List</h2>
+        <div className="mb-3 relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by item name or code..."
+            className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all"
+          />
+        </div>
         <div className="bg-white rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.04)] p-4 border border-slate-100 flex flex-row justify-between items-center gap-3">
           <div className="flex items-center gap-2">
             <div className="bg-indigo-100 text-indigo-600 p-1.5 rounded-lg text-sm">📦</div>
@@ -104,7 +128,13 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-slate-100">
-            {items.map((item) => (
+            {filteredItems.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="text-center py-8 text-slate-500">
+                  {search ? 'No items match your search.' : 'No items found.'}
+                </td>
+              </tr>
+            ) : filteredItems.map((item) => (
               <tr key={item.id} className="hover:bg-indigo-50/30 transition-colors group">
                 {editingId === item.id ? (
                   <>
@@ -196,7 +226,7 @@ const ItemsListTab = ({ items, onDeleteItem, onUpdateItem }) => {
                 )}
               </tr>
             ))}
-          </tbody>
+            </tbody>
         </table>
       </div>
     </div>
